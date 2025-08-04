@@ -20,7 +20,8 @@ public class Endereco {
 
     @Override
     public String toString() {
-        return String.format("Endereço: rua %s, numero %d, complemento %s, cidade %s, estado %s, CEP: %s",
+        return String.format("Endereço: rua %s, numero %d, complemento %s, cidade %s," +
+                        " estado %s, CEP: %s",
                 rua, numero, complemento, cidade, estado, cep);
     }
 }

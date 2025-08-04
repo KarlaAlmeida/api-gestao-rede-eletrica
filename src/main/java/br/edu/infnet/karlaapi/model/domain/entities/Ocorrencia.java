@@ -24,7 +24,9 @@ public class Ocorrencia {
 
     @Override
     public String toString() {
-        return String.format("Ocorrência: %d - %s - %s - %s - %s - %s",
-                id, ativo, descricaoOcorrencia, dataRegistroOcorrencia, prioridadeOcorrecia, statusOcorrecia);
+        return String.format("Ocorrência - ID: %d - %s - Descrição: %s - Data da Ocorrência %s" +
+                        " Prioridade: %s - Status: %s",
+                id, ativo, descricaoOcorrencia, dataRegistroOcorrencia,
+                prioridadeOcorrecia, statusOcorrecia);
     }
 }

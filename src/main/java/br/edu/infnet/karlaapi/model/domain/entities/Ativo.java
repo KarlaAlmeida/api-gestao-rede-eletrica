@@ -24,8 +24,8 @@ public class Ativo {
 
     @Override
     public String toString() {
-        return String.format("Ativo: ID %d - Tipo %s - Identificador %s - Endereço: %s - " +
-                        "Data de instalação%s - Status %s",
+        return String.format("Ativo - ID: %d - Tipo: %s - Identificador: %s - Endereço: %s - " +
+                        "Data de instalação: %s - Status: %s",
                 id, tipoAtivo, identificador, endereco, dataInstalacao, statusAtivo);
     }
 }

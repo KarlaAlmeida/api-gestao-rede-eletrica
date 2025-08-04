@@ -19,7 +19,8 @@ public class OrdemServico {
 
     @Override
     public String toString() {
-        return String.format("Ordem de Serviço: %d - %s - %s - %s - %s - %s - %s",
+        return String.format("Ordem de Serviço - ID: %d - %s - %s - Descrição Serviço %s - " +
+                        "Data criação OS: %s - Data conclusão OS: %s - Status: %s",
                 id, ocorrencia, tecnico, descricaoServico, dataCriacaoOS, dataConclusaoOS, statusOS);
     }
 }

@@ -11,13 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Tecnico extends Funcionario {
 
-    private Integer id;
     private String especialidade;
     private boolean disponivel;
 
     @Override
     public String toString() {
-        return String.format("%s - Id: %d - Especialidade: %s - Disponível: %s",
-                super.toString(), id, especialidade, disponivel ? "Sim" : "Não");
+        return String.format("%s - Especialidade: %s - Disponível: %s",
+                super.toString(), especialidade, disponivel ? "Sim" : "Não");
     }
 }

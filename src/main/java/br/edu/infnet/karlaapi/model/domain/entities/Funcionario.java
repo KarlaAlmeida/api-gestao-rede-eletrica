@@ -11,19 +11,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Funcionario {
 
+    private Integer id;
     private String nome;
     private String cpf;
     private String email;
     private String telefone;
-    private int matricula;
     private double ultimoSalario;
     private boolean ehAtivo;
 
     @Override
     public String toString() {
-        return String.format("Funcionario %s - CPF: %s - E-mail: %s - Telefone: %s -" +
-                        " Matricula: %d - Último Salário: R$%.2f - Situação: %s",
-                nome, cpf, email, telefone, matricula,
-                ultimoSalario, ehAtivo ? "Ativo" : "Inativo ");
+        return String.format("Funcionario %s - Matricula: %d - CPF: %s - E-mail: %s - Telefone: %s " +
+                        "- Último Salário: R$%.2f - Situação: %s",
+                nome, id, cpf, email, telefone, ultimoSalario, ehAtivo ? "Ativo" : "Inativo ");
     }
 }
