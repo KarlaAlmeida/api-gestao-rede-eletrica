@@ -2,10 +2,7 @@ package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,12 +16,12 @@ public class TecnicoController {
         this.tecnicoService = tecnicoService;
     }
 
-    @GetMapping
-    public Tecnico obterTecnico(){
-        return tecnicoService.obter();
+    @GetMapping(value = "/{id}")
+    public Tecnico obterTecnicoPorId(@PathVariable Integer id){
+        return tecnicoService.obterporId(id);
     }
 
-    @GetMapping("/lista")
+    @GetMapping
     public List<Tecnico> obterListaTecnicos(){
         return tecnicoService.obterLista();
     }

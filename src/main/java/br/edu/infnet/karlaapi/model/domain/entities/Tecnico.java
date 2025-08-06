@@ -7,12 +7,21 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Tecnico extends Funcionario {
 
     private String especialidade;
     private boolean disponivel;
+
+    public Tecnico(Integer id, String nome, String cpf, String email, String telefone,
+                   Endereco endereco, double ultimoSalario, boolean ehAtivo,
+                   String especialidade, boolean disponivel) {
+        super(id, nome, cpf, email, telefone, endereco, ultimoSalario, ehAtivo);
+        this.especialidade = especialidade;
+        this.disponivel = disponivel;
+    }
+
+    public Tecnico() {
+    }
 
     @Override
     public String toString() {

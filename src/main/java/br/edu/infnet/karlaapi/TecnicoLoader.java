@@ -1,5 +1,6 @@
 package br.edu.infnet.karlaapi;
 
+import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
 import org.springframework.boot.ApplicationArguments;
@@ -33,15 +34,24 @@ public class TecnicoLoader implements ApplicationRunner{
             campos = linha.split(";");
 
             Tecnico tecnico = new Tecnico();
-            tecnico.setId(Integer.valueOf(campos[0]));
-            tecnico.setNome(campos[1]);
-            tecnico.setCpf(campos[2]);
-            tecnico.setEmail(campos[3]);
-            tecnico.setTelefone(campos[4]);
-            tecnico.setUltimoSalario(Double.valueOf(campos[5]));
-            tecnico.setEhAtivo(Boolean.valueOf(campos[6]));
-            tecnico.setEspecialidade(campos[7]);
-            tecnico.setDisponivel(Boolean.valueOf(campos[8]));
+            tecnico.setNome(campos[0]);
+            tecnico.setCpf(campos[1]);
+            tecnico.setEmail(campos[2]);
+            tecnico.setTelefone(campos[3]);
+            tecnico.setUltimoSalario(Double.valueOf(campos[4]));
+            tecnico.setEhAtivo(Boolean.valueOf(campos[5]));
+            tecnico.setEspecialidade(campos[6]);
+            tecnico.setDisponivel(Boolean.valueOf(campos[7]));
+
+            Endereco endereco = new Endereco();
+            endereco.setCep(campos[8]);
+            endereco.setRua(campos[9]);
+            endereco.setNumero(Integer.valueOf(campos[10]));
+            endereco.setComplemento(campos[11]);
+            endereco.setCidade(campos[12]);
+            endereco.setEstado(campos[13]);
+
+            tecnico.setEndereco(endereco);
 
             tecnicoService.salvar(tecnico);
 

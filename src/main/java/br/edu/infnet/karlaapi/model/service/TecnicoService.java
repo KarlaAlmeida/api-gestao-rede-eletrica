@@ -1,6 +1,7 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
+import br.edu.infnet.karlaapi.model.domain.exceptions.TecnicoInvalidoException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,29 +16,29 @@ public class TecnicoService implements CrudService<Tecnico, Integer>{
     private final Map<Integer, Tecnico> mapa = new ConcurrentHashMap<Integer, Tecnico>();
     private final AtomicInteger nextId = new AtomicInteger(1);
 
-    public Tecnico obter(){
-        Tecnico tecnico = new Tecnico();
-        tecnico.setId(1);
-        tecnico.setNome("Karla");
-        tecnico.setCpf("123456789-00");
-        tecnico.setEmail("karlacrika@gmail.com");
-        tecnico.setTelefone("83996220199");
-        tecnico.setUltimoSalario(5000.00);
-        tecnico.setEhAtivo(true);
-        tecnico.setEspecialidade("Elétrica");
-        tecnico.setDisponivel(true);
-        return tecnico;
-    }
 
     @Override
     public Tecnico salvar(Tecnico tecnico) {
+        if(tecnico.getNome() == null) {
+            throw new TecnicoInvalidoException("O nome do técnico é uma informação obrigatória!");
+        }
+
         tecnico.setId(nextId.getAndIncrement());
         mapa.put(tecnico.getId(), tecnico);
         return tecnico;
     }
 
     @Override
-    public List obterLista() {
+    public Tecnico obterporId(Integer id) {
+        Tecnico tecnico = mapa.get(id);
+        if(tecnico == null) {
+            throw new IllegalArgumentException("Não foi possível obter o vendedor pelo ID " + id);
+        }
+        return tecnico;
+    }
+
+    @Override
+    public List<Tecnico> obterLista() {
         return new ArrayList<Tecnico>(mapa.values());
     }
 
