@@ -1,11 +1,12 @@
 package br.edu.infnet.karlaapi;
 
-import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
-import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
-import br.edu.infnet.karlaapi.model.service.TecnicoService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
+import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
+import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
+import br.edu.infnet.karlaapi.model.service.TecnicoService;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -53,7 +54,7 @@ public class TecnicoLoader implements ApplicationRunner{
 
             tecnico.setEndereco(endereco);
 
-            tecnicoService.salvar(tecnico);
+            tecnicoService.incluir(tecnico);
 
             System.out.println(tecnico);
 

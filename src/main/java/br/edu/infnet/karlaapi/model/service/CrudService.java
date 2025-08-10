@@ -4,8 +4,9 @@ import java.util.List;
 
 public interface CrudService<T, ID> {
 
-    T salvar(T entity);
-    T obterporId(ID id);
+    T incluir(T entity);
+    T alterar(ID id, T entity);
+    T obterPorId(ID id);
     List<T> obterLista();
     void excluir(ID id);
 }
