@@ -1,1 +1,1 @@
-59150-015;Pantanal;150;Apto 702;Parnamirim;RN
+59150-015;Pantanal;150;Apto 702;Parnamirim;RN;POSTE;2025-08-10;ATIVO

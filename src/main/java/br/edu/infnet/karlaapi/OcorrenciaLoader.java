@@ -2,9 +2,12 @@ package br.edu.infnet.karlaapi;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
+import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
+import br.edu.infnet.karlaapi.model.domain.enums.PrioridadeOcorrecia;
 import br.edu.infnet.karlaapi.model.domain.enums.StatusAtivo;
+import br.edu.infnet.karlaapi.model.domain.enums.StatusOcorrecia;
 import br.edu.infnet.karlaapi.model.domain.enums.TipoAtivo;
-import br.edu.infnet.karlaapi.model.service.AtivoService;
+import br.edu.infnet.karlaapi.model.service.OcorreciaService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -15,19 +18,19 @@ import java.io.FileReader;
 import java.time.LocalDate;
 
 @Component
-@Order(2)
-public class AtivoLoader implements ApplicationRunner{
+@Order(3)
+public class OcorrenciaLoader implements ApplicationRunner{
 
-    private final AtivoService ativoService;
+    private final OcorreciaService ocorreciaService;
 
-    public AtivoLoader(AtivoService ativoService) {
-        this.ativoService = ativoService;
+    public OcorrenciaLoader(OcorreciaService ocorreciaService) {
+        this.ocorreciaService = ocorreciaService;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        FileReader arquivo = new FileReader("ativo.txt");
+        FileReader arquivo = new FileReader("ocorrencia.txt");
         BufferedReader leitura = new BufferedReader(arquivo);
 
         String linha = leitura.readLine();
@@ -37,6 +40,8 @@ public class AtivoLoader implements ApplicationRunner{
         while (linha != null) {
 
             campos = linha.split(";");
+
+            Ocorrencia ocorrencia = new Ocorrencia();
 
             Ativo ativo = new Ativo();
 
@@ -49,19 +54,26 @@ public class AtivoLoader implements ApplicationRunner{
             endereco.setEstado(campos[5]);
 
             ativo.setEndereco(endereco);
-
             ativo.setTipoAtivo(TipoAtivo.valueOf(campos[6]));
             ativo.setDataInstalacao(LocalDate.parse(campos[7]));
             ativo.setStatusAtivo(StatusAtivo.valueOf(campos[8]));
+            ativo.setId(Integer.valueOf(campos[11]));
 
-            ativoService.incluir(ativo);
+            ocorrencia.setAtivo(ativo);
 
-            System.out.println(ativo);
+            ocorrencia.setDescricaoOcorrencia(campos[9]);
+            ocorrencia.setDataRegistroOcorrencia(LocalDate.now());
+            ocorrencia.setPrioridadeOcorrecia(PrioridadeOcorrecia.valueOf(campos[10]));
+            ocorrencia.setStatusOcorrecia(StatusOcorrecia.REGISTRADA);
+
+            ocorreciaService.incluir(ocorrencia);
+
+            System.out.println(ocorrencia);
 
             linha = leitura.readLine();
         }
 
-        System.out.println(" - " + ativoService.obterLista().size());
+        System.out.println(" - " + ocorreciaService.obterLista().size());
 
         leitura.close();
     }

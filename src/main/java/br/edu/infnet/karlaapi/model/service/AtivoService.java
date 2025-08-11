@@ -1,7 +1,8 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
-import br.edu.infnet.karlaapi.model.domain.exceptions.TecnicoInvalidoException;
+import br.edu.infnet.karlaapi.model.domain.enums.StatusAtivo;
+import br.edu.infnet.karlaapi.model.domain.exceptions.AtributoInvalidoException;
 import br.edu.infnet.karlaapi.model.domain.exceptions.IDNaoEncontradoException;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class AtivoService implements CrudService<Ativo, Integer>{
         }
 
         if(ativo.getTipoAtivo() == null) {
-            throw new TecnicoInvalidoException("O tipo do ativo é uma informação obrigatória!");
+            throw new AtributoInvalidoException("O tipo do ativo é uma informação obrigatória!");
         }
     }
 
@@ -50,6 +51,21 @@ public class AtivoService implements CrudService<Ativo, Integer>{
         obterPorId(id);
         ativo.setId(id);
         mapa.put(ativo.getId(), ativo);
+        return ativo;
+    }
+
+    public Ativo alterarStatus(Integer id, StatusAtivo status){
+        Ativo ativo = mapa.get(id);
+
+        if(ativo == null) {
+            throw new IllegalArgumentException("Não foi possível obter o ativo pelo ID " + id);
+        }
+
+        if(status.equals(ativo.getStatusAtivo())){
+            throw new IllegalStateException("O status atual do ativo já é " + status);
+        }
+
+        ativo.setStatusAtivo(status);
         return ativo;
     }
 

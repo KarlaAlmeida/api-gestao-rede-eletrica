@@ -1,6 +1,7 @@
 package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
+import br.edu.infnet.karlaapi.model.domain.enums.StatusAtivo;
 import br.edu.infnet.karlaapi.model.service.AtivoService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,10 @@ public class AtivoController {
         return ativoService.alterar(id, ativo);
     }
 
-    //CRIAR UM PATCH
+    @PatchMapping(value = "/{id}")
+    public Ativo alterarStatus(@PathVariable Integer id, @RequestParam StatusAtivo status){
+        return ativoService.alterarStatus(id, status);
+    }
 
     @GetMapping(value = "/{id}")
     public Ativo obterPorId(@PathVariable Integer id){

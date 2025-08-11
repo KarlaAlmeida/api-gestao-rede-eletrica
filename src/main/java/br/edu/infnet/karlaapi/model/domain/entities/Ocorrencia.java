@@ -2,17 +2,13 @@ package br.edu.infnet.karlaapi.model.domain.entities;
 
 import br.edu.infnet.karlaapi.model.domain.enums.PrioridadeOcorrecia;
 import br.edu.infnet.karlaapi.model.domain.enums.StatusOcorrecia;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Ocorrencia {
 
     private Integer id;
@@ -21,6 +17,20 @@ public class Ocorrencia {
     private LocalDate dataRegistroOcorrencia;
     private PrioridadeOcorrecia prioridadeOcorrecia;
     private StatusOcorrecia statusOcorrecia;
+
+    public Ocorrencia(Integer id, Ativo ativo, String descricaoOcorrencia,
+                      LocalDate dataRegistroOcorrencia, PrioridadeOcorrecia prioridadeOcorrecia,
+                      StatusOcorrecia statusOcorrecia) {
+        this.id = id;
+        this.ativo = ativo;
+        this.descricaoOcorrencia = descricaoOcorrencia;
+        this.dataRegistroOcorrencia = dataRegistroOcorrencia;
+        this.prioridadeOcorrecia = prioridadeOcorrecia;
+        this.statusOcorrecia = statusOcorrecia;
+    }
+
+    public Ocorrencia() {
+    }
 
     @Override
     public String toString() {

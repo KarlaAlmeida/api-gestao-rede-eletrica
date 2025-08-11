@@ -2,6 +2,7 @@ package br.edu.infnet.karlaapi;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
@@ -12,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 @Component
+@Order(1)
 public class TecnicoLoader implements ApplicationRunner{
 
     private final TecnicoService tecnicoService;

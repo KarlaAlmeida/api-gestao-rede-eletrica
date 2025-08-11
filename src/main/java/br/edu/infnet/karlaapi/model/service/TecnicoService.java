@@ -1,7 +1,7 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
-import br.edu.infnet.karlaapi.model.domain.exceptions.TecnicoInvalidoException;
+import br.edu.infnet.karlaapi.model.domain.exceptions.AtributoInvalidoException;
 import br.edu.infnet.karlaapi.model.domain.exceptions.IDNaoEncontradoException;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class TecnicoService implements CrudService<Tecnico, Integer>{
         }
 
         if(tecnico.getNome() == null || tecnico.getNome().trim().isEmpty()) {
-            throw new TecnicoInvalidoException("O nome do técnico é uma informação obrigatória!");
+            throw new AtributoInvalidoException("O nome do técnico é uma informação obrigatória!");
         }
     }
 
