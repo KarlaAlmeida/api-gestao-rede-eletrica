@@ -1,0 +1,664 @@
+{
+	"info": {
+		"_postman_id": "29891de6-fd8e-4cde-ae92-5ba83d8a56dd",
+		"name": "api-rede-eletrica",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45106847",
+		"_collection_link": "https://karlaalmeida.postman.co/workspace/Karla-Almeida's-Workspace~e8134b85-cecd-4f1d-81bf-3441d7766e75/collection/45106847-29891de6-fd8e-4cde-ae92-5ba83d8a56dd?action=share&source=collection_link&creator=45106847"
+	},
+	"item": [
+		{
+			"name": "tecnico",
+			"item": [
+				{
+					"name": "obterPorID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/tecnicos/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tecnicos",
+								"4"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterLista",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/tecnicos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tecnicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incluir",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Maria\",\r\n    \"cpf\": \"123456789-22\",\r\n    \"email\": \"maria@email.com\",\r\n    \"telefone\": \"81999873240\",\r\n    \"endereco\": {\r\n        \"cep\": \"51000-000\",\r\n        \"rua\": \"Magalhaes\",\r\n        \"numero\": 678,\r\n        \"complemento\": \"na\",\r\n        \"cidade\": \"Recife\",\r\n        \"estado\": \"PE\"\r\n    },\r\n    \"ultimoSalario\": 6000.0,\r\n    \"ehAtivo\": true,\r\n    \"especialidade\": \"Elétrica\",\r\n    \"disponivel\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/tecnicos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tecnicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Maria Silva\",\r\n    \"cpf\": \"123456789-22\",\r\n    \"email\": \"maria@email.com\",\r\n    \"telefone\": \"81999873240\",\r\n    \"endereco\": {\r\n        \"cep\": \"51000-000\",\r\n        \"rua\": \"Magalhaes\",\r\n        \"numero\": 678,\r\n        \"complemento\": \"na\",\r\n        \"cidade\": \"Recife\",\r\n        \"estado\": \"PE\"\r\n    },\r\n    \"ultimoSalario\": 6000.0,\r\n    \"ehAtivo\": true,\r\n    \"especialidade\": \"Elétrica\",\r\n    \"disponivel\": true\r\n}"
+						},
+						"url": {
+							"raw": "localhost:8080/api/tecnicos/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tecnicos",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inativar",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"id\": 1,\r\n        \"nome\": \"Karla\",\r\n        \"cpf\": \"123456789-00\",\r\n        \"email\": \"karlacrika@gmail.com\",\r\n        \"telefone\": \"83996220199\",\r\n        \"endereco\": {\r\n            \"cep\": \"59150-015\",\r\n            \"rua\": \"Pantanal\",\r\n            \"numero\": 150,\r\n            \"complemento\": \"Apto 702\",\r\n            \"cidade\": \"Parnamirim\",\r\n            \"estado\": \"RN\"\r\n        },\r\n        \"ultimoSalario\": 6000.0,\r\n        \"ehAtivo\": true,\r\n        \"especialidade\": \"Elétrica\",\r\n        \"disponivel\": true\r\n    }"
+						},
+						"url": {
+							"raw": "localhost:8080/api/tecnicos/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tecnicos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "excluir",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"id\": 1,\r\n        \"nome\": \"Karla\",\r\n        \"cpf\": \"123456789-00\",\r\n        \"email\": \"karlacrika@gmail.com\",\r\n        \"telefone\": \"83996220199\",\r\n        \"endereco\": {\r\n            \"cep\": \"59150-015\",\r\n            \"rua\": \"Pantanal\",\r\n            \"numero\": 150,\r\n            \"complemento\": \"Apto 702\",\r\n            \"cidade\": \"Parnamirim\",\r\n            \"estado\": \"RN\"\r\n        },\r\n        \"ultimoSalario\": 6000.0,\r\n        \"ehAtivo\": true,\r\n        \"especialidade\": \"Elétrica\",\r\n        \"disponivel\": true\r\n    }"
+						},
+						"url": {
+							"raw": "localhost:8080/api/tecnicos/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"tecnicos",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ativo",
+			"item": [
+				{
+					"name": "obterPorID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ativos/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ativos",
+								"1"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterLista",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ativos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ativos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incluir",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "   {\r\n        \"tipoAtivo\": \"TRANSFORMADOR\",\r\n        \"endereco\": {\r\n            \"cep\": \"59150-015\",\r\n            \"rua\": \"Pantanal\",\r\n            \"numero\": 150,\r\n            \"complemento\": \"Apto 702\",\r\n            \"cidade\": \"Parnamirim\",\r\n            \"estado\": \"RN\"\r\n        },\r\n        \"dataInstalacao\": \"2025-08-11\",\r\n        \"statusAtivo\": \"ATIVO\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/ativos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ativos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "   {\r\n        \"id\": 2,\r\n        \"tipoAtivo\": \"TRANSFORMADOR\",\r\n        \"endereco\": {\r\n            \"cep\": \"59150-015\",\r\n            \"rua\": \"Pantanal\",\r\n            \"numero\": 150,\r\n            \"complemento\": \"Apto 702\",\r\n            \"cidade\": \"Parnamirim\",\r\n            \"estado\": \"RN\"\r\n        },\r\n        \"dataInstalacao\": \"2025-08-12\",\r\n        \"statusAtivo\": \"ATIVO\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/ativos/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ativos",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "excluir",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"id\": 1,\r\n        \"nome\": \"Karla\",\r\n        \"cpf\": \"123456789-00\",\r\n        \"email\": \"karlacrika@gmail.com\",\r\n        \"telefone\": \"83996220199\",\r\n        \"endereco\": {\r\n            \"cep\": \"59150-015\",\r\n            \"rua\": \"Pantanal\",\r\n            \"numero\": 150,\r\n            \"complemento\": \"Apto 702\",\r\n            \"cidade\": \"Parnamirim\",\r\n            \"estado\": \"RN\"\r\n        },\r\n        \"ultimoSalario\": 6000.0,\r\n        \"ehAtivo\": true,\r\n        \"especialidade\": \"Elétrica\",\r\n        \"disponivel\": true\r\n    }"
+						},
+						"url": {
+							"raw": "localhost:8080/api/ativos/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ativos",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterarStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ativos/2?status=INATIVO",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ativos",
+								"2"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "INATIVO"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ocorrencia",
+			"item": [
+				{
+					"name": "obterPorID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ocorrencias/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ocorrencias",
+								"2"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterLista",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ocorrencias",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ocorrencias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incluir",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ativoId\": 1,\r\n    \"descricaoOcorrencia\": \"Carro bateu e o poste está caindo\",\r\n    \"prioridadeOcorrecia\": \"ALTA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/ocorrencias",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ocorrencias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 2,\r\n    \"ativo\": {\r\n        \"id\": 2,\r\n        \"tipoAtivo\": \"TRANSFORMADOR\",\r\n        \"endereco\": {\r\n            \"cep\": \"58415-625\",\r\n            \"rua\": \"ANA VILAR\",\r\n            \"numero\": 472,\r\n            \"complemento\": \"Apto 1005\",\r\n            \"cidade\": \"CAMPINA GRANDE\",\r\n            \"estado\": \"PB\"\r\n        },\r\n        \"dataInstalacao\": \"2025-07-01\",\r\n        \"statusAtivo\": \"ATIVO\"\r\n    },\r\n    \"descricaoOcorrencia\": \"Transformador em chamas\",\r\n    \"dataRegistroOcorrencia\": \"2025-08-11\",\r\n    \"prioridadeOcorrecia\": \"CRITICA\",\r\n    \"statusOcorrecia\": \"REGISTRADA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/ocorrencias/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ocorrencias",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "excluir",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"id\": 1,\r\n        \"nome\": \"Karla\",\r\n        \"cpf\": \"123456789-00\",\r\n        \"email\": \"karlacrika@gmail.com\",\r\n        \"telefone\": \"83996220199\",\r\n        \"endereco\": {\r\n            \"cep\": \"59150-015\",\r\n            \"rua\": \"Pantanal\",\r\n            \"numero\": 150,\r\n            \"complemento\": \"Apto 702\",\r\n            \"cidade\": \"Parnamirim\",\r\n            \"estado\": \"RN\"\r\n        },\r\n        \"ultimoSalario\": 6000.0,\r\n        \"ehAtivo\": true,\r\n        \"especialidade\": \"Elétrica\",\r\n        \"disponivel\": true\r\n    }"
+						},
+						"url": {
+							"raw": "localhost:8080/api/ocorrencias/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ocorrencias",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterarStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ativos/2?status=INATIVO",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ativos",
+								"2"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "INATIVO"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ordem-servico",
+			"item": [
+				{
+					"name": "obterPorID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ordem-servico/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ordem-servico",
+								"2"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "obterLista",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ordem-servico",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ordem-servico"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incluir",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n        \"ocorrencia\": {\r\n            \"id\": 2,\r\n            \"ativo\": {\r\n                \"id\": 1,\r\n                \"tipoAtivo\": \"POSTE\",\r\n                \"endereco\": {\r\n                    \"cep\": \"59150-015\",\r\n                    \"rua\": \"Pantanal\",\r\n                    \"numero\": 150,\r\n                    \"complemento\": \"Apto 702\",\r\n                    \"cidade\": \"Parnamirim\",\r\n                    \"estado\": \"RN\"\r\n                },\r\n                \"dataInstalacao\": \"2025-08-10\",\r\n                \"statusAtivo\": \"ATIVO\"\r\n            },\r\n            \"descricaoOcorrencia\": \"Poste caiu\",\r\n            \"dataRegistroOcorrencia\": \"2025-08-12\",\r\n            \"prioridadeOcorrecia\": \"CRITICA\",\r\n            \"statusOcorrecia\": \"REGISTRADA\"\r\n        },\r\n        \"tecnico\": {\r\n            \"id\": 1,\r\n            \"nome\": \"Karla\",\r\n            \"cpf\": \"123456789-00\",\r\n            \"email\": \"karlacrika@gmail.com\",\r\n            \"telefone\": \"83996220199\",\r\n            \"endereco\": {\r\n                \"cep\": \"59150-015\",\r\n                \"rua\": \"Pantanal\",\r\n                \"numero\": 150,\r\n                \"complemento\": \"Apto 702\",\r\n                \"cidade\": \"Parnamirim\",\r\n                \"estado\": \"RN\"\r\n            },\r\n            \"ultimoSalario\": 5000.0,\r\n            \"ehAtivo\": true,\r\n            \"especialidade\": \"Elétrica\",\r\n            \"disponivel\": true\r\n        },\r\n        \"descricaoServico\": \"Substituir o poste\",\r\n        \"dataCriacaoOS\": \"2025-08-14\",\r\n        \"dataConclusaoOS\": null,\r\n        \"statusOS\": \"ABERTA\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/ordem-servico",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ordem-servico"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n        \"id\": 2,\r\n        \"ocorrencia\": {\r\n            \"id\": 2,\r\n            \"ativo\": {\r\n                \"id\": 1,\r\n                \"tipoAtivo\": \"POSTE\",\r\n                \"endereco\": {\r\n                    \"cep\": \"59150-015\",\r\n                    \"rua\": \"Pantanal\",\r\n                    \"numero\": 150,\r\n                    \"complemento\": \"Apto 702\",\r\n                    \"cidade\": \"Parnamirim\",\r\n                    \"estado\": \"RN\"\r\n                },\r\n                \"dataInstalacao\": \"2025-08-10\",\r\n                \"statusAtivo\": \"ATIVO\"\r\n            },\r\n            \"descricaoOcorrencia\": \"Poste caiu\",\r\n            \"dataRegistroOcorrencia\": \"2025-08-12\",\r\n            \"prioridadeOcorrecia\": \"CRITICA\",\r\n            \"statusOcorrecia\": \"REGISTRADA\"\r\n        },\r\n        \"tecnico\": {\r\n            \"id\": 1,\r\n            \"nome\": \"Jaime\",\r\n            \"cpf\": \"987654321-00\",\r\n            \"email\": \"jaime@gmail.com\",\r\n            \"telefone\": \"839884033479\",\r\n            \"endereco\": {\r\n                \"cep\": \"59150-015\",\r\n                \"rua\": \"Pantanal\",\r\n                \"numero\": 150,\r\n                \"complemento\": \"Apto 702\",\r\n                \"cidade\": \"Parnamirim\",\r\n                \"estado\": \"RN\"\r\n            },\r\n            \"ultimoSalario\": 5000.0,\r\n            \"ehAtivo\": true,\r\n            \"especialidade\": \"Elétrica\",\r\n            \"disponivel\": true\r\n        },\r\n        \"descricaoServico\": \"Substituir o poste\",\r\n        \"dataCriacaoOS\": \"2025-08-14\",\r\n        \"dataConclusaoOS\": null,\r\n        \"statusOS\": \"ABERTA\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/ordem-servico/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ordem-servico",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "excluir",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\r\n        \"id\": 1,\r\n        \"nome\": \"Karla\",\r\n        \"cpf\": \"123456789-00\",\r\n        \"email\": \"karlacrika@gmail.com\",\r\n        \"telefone\": \"83996220199\",\r\n        \"endereco\": {\r\n            \"cep\": \"59150-015\",\r\n            \"rua\": \"Pantanal\",\r\n            \"numero\": 150,\r\n            \"complemento\": \"Apto 702\",\r\n            \"cidade\": \"Parnamirim\",\r\n            \"estado\": \"RN\"\r\n        },\r\n        \"ultimoSalario\": 6000.0,\r\n        \"ehAtivo\": true,\r\n        \"especialidade\": \"Elétrica\",\r\n        \"disponivel\": true\r\n    }"
+						},
+						"url": {
+							"raw": "localhost:8080/api/ordem-servico/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ordem-servico",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterarStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ordem-servico/2/status?status=EM_ANDAMENTO",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ordem-servico",
+								"2",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "EM_ANDAMENTO"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterarStatus Copy",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ordem-servico/2/status?status=EM_ANDAMENTO",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ordem-servico",
+								"2",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "EM_ANDAMENTO"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
