@@ -1,7 +1,7 @@
 package br.edu.infnet.karlaapi.controller;
 
+import br.edu.infnet.karlaapi.model.domain.dto.OcorrenciaRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrecia;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrecia;
 import br.edu.infnet.karlaapi.model.service.OcorreciaService;
 import org.springframework.http.HttpStatus;
@@ -17,23 +17,22 @@ public class OcorrenciaController {
     private final OcorreciaService ocorreciaService;
 
     public OcorrenciaController(OcorreciaService ocorreciaService) {
-
         this.ocorreciaService = ocorreciaService;
     }
 
     @PostMapping
-    public ResponseEntity<Ocorrencia> incluir(@RequestBody Ocorrencia ocorrencia) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ocorreciaService.incluir(ocorrencia));
+    public ResponseEntity<Ocorrencia> incluir(@RequestBody OcorrenciaRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ocorreciaService.incluir(dto));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Ocorrencia> alterar(@PathVariable Integer id,
-                                              @RequestBody Ocorrencia ocorrencia) {
+                                              @RequestBody OcorrenciaRequestDTO dto) {
 
-        if (ocorrencia == null) {
+        if (dto == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(ocorreciaService.alterar(id, ocorrencia));
+        return ResponseEntity.ok(ocorreciaService.alterar(id, dto));
 
     }
 
@@ -41,12 +40,6 @@ public class OcorrenciaController {
     public ResponseEntity<Ocorrencia> alterarStatus(@PathVariable Integer id,
                                     @RequestParam StatusOcorrecia status){
         return ResponseEntity.ok(ocorreciaService.alterarStatus(id, status));
-    }
-
-    @PatchMapping(value = "/{id}/prioridade")
-    public ResponseEntity<Ocorrencia> alterarPrioridade(@PathVariable Integer id,
-                                        @RequestParam PrioridadeOcorrecia prioridade){
-        return ResponseEntity.ok(ocorreciaService.alterarPrioridade(id, prioridade));
     }
 
     @GetMapping(value = "/{id}")

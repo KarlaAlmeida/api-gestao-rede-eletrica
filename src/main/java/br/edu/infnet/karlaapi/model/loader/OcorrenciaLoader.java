@@ -66,7 +66,7 @@ public class OcorrenciaLoader implements ApplicationRunner{
             ocorrencia.setPrioridadeOcorrecia(PrioridadeOcorrecia.valueOf(campos[10]));
             ocorrencia.setStatusOcorrecia(StatusOcorrecia.REGISTRADA);
 
-            ocorreciaService.incluir(ocorrencia);
+           // ocorreciaService.incluir(ocorrencia);
 
             System.out.println(ocorrencia);
 

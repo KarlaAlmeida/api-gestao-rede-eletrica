@@ -1,5 +1,6 @@
 package br.edu.infnet.karlaapi.controller;
 
+import br.edu.infnet.karlaapi.model.domain.dto.OrdemServicoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.OrdemServico;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
 import br.edu.infnet.karlaapi.model.service.OrdemServicoService;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -20,22 +22,28 @@ public class OrdemServicoController {
     }
 
     @PostMapping
-    public ResponseEntity<OrdemServico> incluir(@RequestBody OrdemServico ordemServico) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ordemServicoService.incluir(ordemServico));
+    public ResponseEntity<OrdemServico> incluir(@RequestBody OrdemServicoRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ordemServicoService.incluir(dto));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<OrdemServico> alterar(@PathVariable Integer id, @RequestBody OrdemServico ordemServico) {
-        if (ordemServico == null) {
+    public ResponseEntity<OrdemServico> alterar(@PathVariable Integer id, @RequestBody OrdemServicoRequestDTO dto) {
+        if (dto == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(ordemServicoService.alterar(id, ordemServico));
+        return ResponseEntity.ok(ordemServicoService.alterar(id, dto));
     }
 
     @PatchMapping(value = "/{id}/status")
     public ResponseEntity<OrdemServico> alterarStatus(@PathVariable Integer id,
                                     @RequestParam StatusOS status){
         return ResponseEntity.ok(ordemServicoService.alterarStatus(id, status));
+    }
+
+    @PatchMapping(value = "/{id}/data-conclusao")
+    public ResponseEntity<OrdemServico> alterarDataConclusao(@PathVariable Integer id,
+                                                      @RequestParam LocalDate dataConclusao){
+        return ResponseEntity.ok(ordemServicoService.alterarDataConclusao(id, dataConclusao));
     }
 
     @GetMapping(value = "/{id}")

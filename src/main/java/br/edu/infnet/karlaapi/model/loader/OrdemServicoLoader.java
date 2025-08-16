@@ -89,7 +89,7 @@ public class OrdemServicoLoader implements ApplicationRunner{
             ordemServico.setDataCriacaoOS(LocalDate.parse(campos[28]));
             ordemServico.setStatusOS(StatusOS.valueOf(campos[29]));
 
-            ordemServicoService.incluir(ordemServico);
+            //ordemServicoService.incluir(ordemServico);
 
             System.out.println(ordemServico);
 
