@@ -372,7 +372,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"ativo\": {\r\n        \"id\": 2,\r\n        \"tipoAtivo\": \"TRANSFORMADOR\",\r\n        \"endereco\": {\r\n            \"cep\": \"58415-625\",\r\n            \"rua\": \"ANA VILAR\",\r\n            \"numero\": 472,\r\n            \"complemento\": \"Apto 1005\",\r\n            \"cidade\": \"CAMPINA GRANDE\",\r\n            \"estado\": \"PB\"\r\n        },\r\n        \"dataInstalacao\": \"2025-07-01\",\r\n        \"statusAtivo\": \"ATIVO\"\r\n    },\r\n    \"descricaoOcorrencia\": \"Transformador em chamas\",\r\n    \"dataRegistroOcorrencia\": \"2025-08-11\",\r\n    \"prioridadeOcorrecia\": \"ALTA\",\r\n    \"statusOcorrecia\": \"REGISTRADA\"\r\n}",
+							"raw": "{\r\n    \"ativoId\": 1,\r\n    \"descricaoOcorrencia\": \"Carro bateu e o poste está caindo\",\r\n    \"prioridadeOcorrecia\": \"ALTA\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -448,32 +448,6 @@
 				},
 				{
 					"name": "alterarStatus",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/ativos/2?status=INATIVO",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"ativos",
-								"2"
-							],
-							"query": [
-								{
-									"key": "status",
-									"value": "INATIVO"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "alterarPrioridade",
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -632,6 +606,33 @@
 				},
 				{
 					"name": "alterarStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/ordem-servico/2/status?status=EM_ANDAMENTO",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"ordem-servico",
+								"2",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "EM_ANDAMENTO"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "alterarStatus Copy",
 					"request": {
 						"method": "PATCH",
 						"header": [],
