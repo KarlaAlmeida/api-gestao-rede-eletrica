@@ -1,4 +1,4 @@
-package br.edu.infnet.karlaapi.model.domain.exceptions;
+package br.edu.infnet.karlaapi.model.infraestructure.exceptions;
 
 public class AtributoInvalidoException extends RuntimeException {
 

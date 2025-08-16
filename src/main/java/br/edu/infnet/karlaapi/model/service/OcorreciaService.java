@@ -1,23 +1,23 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.domain.enums.PrioridadeOcorrecia;
-import br.edu.infnet.karlaapi.model.domain.enums.StatusOcorrecia;
-import br.edu.infnet.karlaapi.model.domain.exceptions.AtributoInvalidoException;
-import br.edu.infnet.karlaapi.model.domain.exceptions.IDNaoEncontradoException;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrecia;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrecia;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.AtributoInvalidoException;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.IDNaoEncontradoException;
+import br.edu.infnet.karlaapi.model.repository.OcorrenciaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class OcorreciaService implements CrudService<Ocorrencia, Integer>{
 
-    private final Map<Integer, Ocorrencia> mapa = new ConcurrentHashMap<Integer, Ocorrencia>();
-    private final AtomicInteger nextId = new AtomicInteger(1);
+    private final OcorrenciaRepository ocorrenciaRepository;
+
+    public OcorreciaService(OcorrenciaRepository ocorrenciaRepository) {
+        this.ocorrenciaRepository = ocorrenciaRepository;
+    }
 
     private void validar(Ocorrencia ocorrencia) {
         if(ocorrencia == null) {
@@ -41,26 +41,24 @@ public class OcorreciaService implements CrudService<Ocorrencia, Integer>{
             throw new IllegalArgumentException("Uma nova ocorrência não pode ter um ID na inclusão!");
         }
 
-        ocorrencia.setId(nextId.getAndIncrement());
-        mapa.put(ocorrencia.getId(), ocorrencia);
-        return ocorrencia;
+        return ocorrenciaRepository.save(ocorrencia);
     }
 
     @Override
     public Ocorrencia alterar(Integer id, Ocorrencia ocorrencia) {
-        if(id == null || id == 0) {
-            throw new IllegalArgumentException("O ID para alteração não pode ser nulo/zero!");
+        if(id == null || id <= 0) {
+            throw new IllegalArgumentException(
+                    "O ID para alteração não pode ser nulo e deve ser maio que zero.");
         }
 
         validar(ocorrencia);
         obterPorId(id);
         ocorrencia.setId(id);
-        mapa.put(ocorrencia.getId(), ocorrencia);
-        return ocorrencia;
+        return ocorrenciaRepository.save(ocorrencia);
     }
 
     public Ocorrencia alterarStatus(Integer id, StatusOcorrecia status){
-        Ocorrencia ocorrencia = mapa.get(id);
+        Ocorrencia ocorrencia = obterPorId(id);
 
         if(ocorrencia == null) {
             throw new IllegalArgumentException("Não foi possível obter a ocorrência pelo ID " + id);
@@ -71,11 +69,11 @@ public class OcorreciaService implements CrudService<Ocorrencia, Integer>{
         }
 
         ocorrencia.setStatusOcorrecia(status);
-        return ocorrencia;
+        return ocorrenciaRepository.save(ocorrencia);
     }
 
     public Ocorrencia alterarPrioridade(Integer id, PrioridadeOcorrecia prioridade){
-        Ocorrencia ocorrencia = mapa.get(id);
+        Ocorrencia ocorrencia = obterPorId(id);
 
         if(ocorrencia == null) {
             throw new IllegalArgumentException("Não foi possível obter a ocorrência pelo ID " + id);
@@ -86,37 +84,32 @@ public class OcorreciaService implements CrudService<Ocorrencia, Integer>{
         }
 
         ocorrencia.setPrioridadeOcorrecia(prioridade);
-        return ocorrencia;
+        return ocorrenciaRepository.save(ocorrencia);
     }
 
     @Override
     public Ocorrencia obterPorId(Integer id) {
-        Ocorrencia ocorrencia = mapa.get(id);
 
-        if(ocorrencia == null) {
-            throw new IllegalArgumentException("Não foi possível obter a ocorrência pelo ID " + id);
-        }
-        return ocorrencia;
+       return ocorrenciaRepository.findById(id).orElseThrow(()->
+                new IDNaoEncontradoException("A ocorrência com ID " + id + " não foi encontrado."));
     }
 
     @Override
     public List<Ocorrencia> obterLista() {
 
-        return new ArrayList<Ocorrencia>(mapa.values());
+        return ocorrenciaRepository.findAll();
     }
 
     @Override
     public void excluir(Integer id) {
 
-        if(id == null || id == 0) {
-            throw new IllegalArgumentException("O ID para exclusão não pode ser nulo/zero!");
+        if(id == null || id <= 0) {
+            throw new IllegalArgumentException("" +
+                    " ID para exclusão não pode ser nulo e deve ser maio que zero.");
         }
 
-        if(!mapa.containsKey(id)) {
-            throw new IDNaoEncontradoException("A ocorrência com ID " + id + " não foi encontrado!");
-        }
-
-        mapa.remove(id);
+        Ocorrencia ocorrencia = obterPorId(id);
+        ocorrenciaRepository.delete(ocorrencia);
     }
 
 }

@@ -1,8 +1,7 @@
-package br.edu.infnet.karlaapi;
+package br.edu.infnet.karlaapi.model.loader;
 
 import br.edu.infnet.karlaapi.model.domain.entities.*;
-import br.edu.infnet.karlaapi.model.domain.enums.*;
-import br.edu.infnet.karlaapi.model.service.OcorreciaService;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.*;
 import br.edu.infnet.karlaapi.model.service.OrdemServicoService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -69,7 +68,7 @@ public class OrdemServicoLoader implements ApplicationRunner{
             tecnico.setEmail(campos[14]);
             tecnico.setTelefone(campos[15]);
             tecnico.setUltimoSalario(Double.valueOf(campos[16]));
-            tecnico.setEhAtivo(Boolean.valueOf(campos[17]));
+            tecnico.setAtivo(Boolean.valueOf(campos[17]));
             tecnico.setEspecialidade(campos[18]);
             tecnico.setDisponivel(Boolean.valueOf(campos[19]));
 

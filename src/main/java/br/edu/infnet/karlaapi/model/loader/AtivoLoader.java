@@ -1,13 +1,10 @@
-package br.edu.infnet.karlaapi;
+package br.edu.infnet.karlaapi.model.loader;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
-import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.domain.enums.PrioridadeOcorrecia;
-import br.edu.infnet.karlaapi.model.domain.enums.StatusAtivo;
-import br.edu.infnet.karlaapi.model.domain.enums.StatusOcorrecia;
-import br.edu.infnet.karlaapi.model.domain.enums.TipoAtivo;
-import br.edu.infnet.karlaapi.model.service.OcorreciaService;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
+import br.edu.infnet.karlaapi.model.service.AtivoService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -18,19 +15,19 @@ import java.io.FileReader;
 import java.time.LocalDate;
 
 @Component
-@Order(3)
-public class OcorrenciaLoader implements ApplicationRunner{
+@Order(2)
+public class AtivoLoader implements ApplicationRunner{
 
-    private final OcorreciaService ocorreciaService;
+    private final AtivoService ativoService;
 
-    public OcorrenciaLoader(OcorreciaService ocorreciaService) {
-        this.ocorreciaService = ocorreciaService;
+    public AtivoLoader(AtivoService ativoService) {
+        this.ativoService = ativoService;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        FileReader arquivo = new FileReader("ocorrencia.txt");
+        FileReader arquivo = new FileReader("ativo.txt");
         BufferedReader leitura = new BufferedReader(arquivo);
 
         String linha = leitura.readLine();
@@ -40,8 +37,6 @@ public class OcorrenciaLoader implements ApplicationRunner{
         while (linha != null) {
 
             campos = linha.split(";");
-
-            Ocorrencia ocorrencia = new Ocorrencia();
 
             Ativo ativo = new Ativo();
 
@@ -54,26 +49,19 @@ public class OcorrenciaLoader implements ApplicationRunner{
             endereco.setEstado(campos[5]);
 
             ativo.setEndereco(endereco);
+
             ativo.setTipoAtivo(TipoAtivo.valueOf(campos[6]));
             ativo.setDataInstalacao(LocalDate.parse(campos[7]));
             ativo.setStatusAtivo(StatusAtivo.valueOf(campos[8]));
-            ativo.setId(Integer.valueOf(campos[11]));
 
-            ocorrencia.setAtivo(ativo);
+            ativoService.incluir(ativo);
 
-            ocorrencia.setDescricaoOcorrencia(campos[9]);
-            ocorrencia.setDataRegistroOcorrencia(LocalDate.now());
-            ocorrencia.setPrioridadeOcorrecia(PrioridadeOcorrecia.valueOf(campos[10]));
-            ocorrencia.setStatusOcorrecia(StatusOcorrecia.REGISTRADA);
-
-            ocorreciaService.incluir(ocorrencia);
-
-            System.out.println(ocorrencia);
+            System.out.println(ativo);
 
             linha = leitura.readLine();
         }
 
-        System.out.println(" - " + ocorreciaService.obterLista().size());
+        System.out.println(" - " + ativoService.obterLista().size());
 
         leitura.close();
     }

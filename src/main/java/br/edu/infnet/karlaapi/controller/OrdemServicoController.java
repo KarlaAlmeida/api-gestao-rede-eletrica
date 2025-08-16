@@ -1,8 +1,10 @@
 package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.entities.OrdemServico;
-import br.edu.infnet.karlaapi.model.domain.enums.StatusOS;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
 import br.edu.infnet.karlaapi.model.service.OrdemServicoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,33 +20,44 @@ public class OrdemServicoController {
     }
 
     @PostMapping
-    public OrdemServico incluir(@RequestBody OrdemServico ordemServico) {
-        return ordemServicoService.incluir(ordemServico);
+    public ResponseEntity<OrdemServico> incluir(@RequestBody OrdemServico ordemServico) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ordemServicoService.incluir(ordemServico));
     }
 
     @PutMapping(value = "/{id}")
-    public OrdemServico alterar(@PathVariable Integer id, @RequestBody OrdemServico ordemServico) {
-        return ordemServicoService.alterar(id, ordemServico);
+    public ResponseEntity<OrdemServico> alterar(@PathVariable Integer id, @RequestBody OrdemServico ordemServico) {
+        if (ordemServico == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(ordemServicoService.alterar(id, ordemServico));
     }
 
     @PatchMapping(value = "/{id}/status")
-    public OrdemServico alterarStatus(@PathVariable Integer id,
+    public ResponseEntity<OrdemServico> alterarStatus(@PathVariable Integer id,
                                     @RequestParam StatusOS status){
-        return ordemServicoService.alterarStatus(id, status);
+        return ResponseEntity.ok(ordemServicoService.alterarStatus(id, status));
     }
 
     @GetMapping(value = "/{id}")
-    public OrdemServico obterPorId(@PathVariable Integer id){
-        return ordemServicoService.obterPorId(id);
+    public ResponseEntity<OrdemServico> obterPorId(@PathVariable Integer id){
+        return ResponseEntity.ok(ordemServicoService.obterPorId(id));
     }
 
     @GetMapping
-    public List<OrdemServico> obterLista(){
-        return ordemServicoService.obterLista();
+    public ResponseEntity<List<OrdemServico>> obterLista(){
+
+        List<OrdemServico> lista = ordemServicoService.obterLista();
+
+        if(lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(lista);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void excluir(@PathVariable Integer id){
+    public ResponseEntity<Void> excluir(@PathVariable Integer id){
         ordemServicoService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }

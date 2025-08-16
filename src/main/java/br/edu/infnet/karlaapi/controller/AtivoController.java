@@ -1,8 +1,10 @@
 package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
-import br.edu.infnet.karlaapi.model.domain.enums.StatusAtivo;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
 import br.edu.infnet.karlaapi.model.service.AtivoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,32 +20,45 @@ public class AtivoController {
     }
 
     @PostMapping
-    public Ativo incluir(@RequestBody Ativo ativo) {
-        return ativoService.incluir(ativo);
+    public ResponseEntity<Ativo> incluir(@RequestBody Ativo ativo) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ativoService.incluir(ativo));
     }
 
     @PutMapping(value = "/{id}")
-    public Ativo alterar(@PathVariable Integer id, @RequestBody Ativo ativo) {
-        return ativoService.alterar(id, ativo);
+    public ResponseEntity<Ativo> alterar(@PathVariable Integer id, @RequestBody Ativo ativo) {
+
+        if (ativo == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(ativoService.alterar(id, ativo));
+
     }
 
     @PatchMapping(value = "/{id}")
-    public Ativo alterarStatus(@PathVariable Integer id, @RequestParam StatusAtivo status){
-        return ativoService.alterarStatus(id, status);
+    public ResponseEntity<Ativo> alterarStatus(@PathVariable Integer id, @RequestParam StatusAtivo status){
+        return ResponseEntity.ok(ativoService.alterarStatus(id, status));
     }
 
     @GetMapping(value = "/{id}")
-    public Ativo obterPorId(@PathVariable Integer id){
-        return ativoService.obterPorId(id);
+    public ResponseEntity<Ativo> obterPorId(@PathVariable Integer id){
+        return ResponseEntity.ok(ativoService.obterPorId(id));
     }
 
     @GetMapping
-    public List<Ativo> obterLista(){
-        return ativoService.obterLista();
+    public ResponseEntity<List<Ativo>> obterLista(){
+
+        List<Ativo> lista = ativoService.obterLista();
+
+        if(lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(lista);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void excluir(@PathVariable Integer id){
+    public ResponseEntity<Void> excluir(@PathVariable Integer id){
         ativoService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }

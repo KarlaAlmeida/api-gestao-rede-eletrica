@@ -1,22 +1,22 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
-import br.edu.infnet.karlaapi.model.domain.enums.StatusAtivo;
-import br.edu.infnet.karlaapi.model.domain.exceptions.AtributoInvalidoException;
-import br.edu.infnet.karlaapi.model.domain.exceptions.IDNaoEncontradoException;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.AtributoInvalidoException;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.IDNaoEncontradoException;
+import br.edu.infnet.karlaapi.model.repository.AtivoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class AtivoService implements CrudService<Ativo, Integer>{
 
-    private final Map<Integer, Ativo> mapa = new ConcurrentHashMap<Integer, Ativo>();
-    private final AtomicInteger nextId = new AtomicInteger(1);
+    private final AtivoRepository ativoRepository;
+
+    public AtivoService(AtivoRepository ativoRepository) {
+        this.ativoRepository = ativoRepository;
+    }
 
     private void validar(Ativo ativo) {
         if(ativo == null) {
@@ -36,26 +36,25 @@ public class AtivoService implements CrudService<Ativo, Integer>{
             throw new IllegalArgumentException("Um novo ativo não pode ter um ID na inclusão!");
         }
 
-        ativo.setId(nextId.getAndIncrement());
-        mapa.put(ativo.getId(), ativo);
-        return ativo;
+        return ativoRepository.save(ativo);
     }
 
     @Override
-    public Ativo alterar(Integer id, Ativo ativo) {
-        if(id == null || id == 0) {
-            throw new IllegalArgumentException("O ID para alteração não pode ser nulo/zero!");
+    public Ativo alterar(Integer id, Ativo ativoAtualizado) {
+
+        if(id == null || id <= 0) {
+            throw new IllegalArgumentException(
+                    "O ID para exclusão não pode ser nulo e deve ser maio que zero.");
         }
 
-        validar(ativo);
+        validar(ativoAtualizado);
         obterPorId(id);
-        ativo.setId(id);
-        mapa.put(ativo.getId(), ativo);
-        return ativo;
+        ativoAtualizado.setId(id);
+        return ativoRepository.save(ativoAtualizado);
     }
 
     public Ativo alterarStatus(Integer id, StatusAtivo status){
-        Ativo ativo = mapa.get(id);
+        Ativo ativo = obterPorId(id);
 
         if(ativo == null) {
             throw new IllegalArgumentException("Não foi possível obter o ativo pelo ID " + id);
@@ -66,37 +65,33 @@ public class AtivoService implements CrudService<Ativo, Integer>{
         }
 
         ativo.setStatusAtivo(status);
-        return ativo;
+        return ativoRepository.save(ativo);
     }
 
     @Override
     public Ativo obterPorId(Integer id) {
-        Ativo ativo = mapa.get(id);
 
-        if(ativo == null) {
-            throw new IllegalArgumentException("Não foi possível obter o ativo pelo ID " + id);
-        }
-        return ativo;
+        return ativoRepository.findById(id).orElseThrow(()->
+                new IDNaoEncontradoException("O ativo com ID " + id + " não foi encontrado."));
     }
 
     @Override
     public List<Ativo> obterLista() {
 
-        return new ArrayList<Ativo>(mapa.values());
+        return ativoRepository.findAll();
     }
 
     @Override
     public void excluir(Integer id) {
 
-        if(id == null || id == 0) {
-            throw new IllegalArgumentException("O ID para exclusão não pode ser nulo/zero!");
+        if(id == null || id <= 0) {
+            throw new IllegalArgumentException(
+                    "O ID para exclusão não pode ser nulo e deve ser maio que zero.");
         }
 
-        if(!mapa.containsKey(id)) {
-            throw new IDNaoEncontradoException("O ativo com ID " + id + " não foi encontrado!");
-        }
+        Ativo ativo = obterPorId(id);
+        ativoRepository.delete(ativo);
 
-        mapa.remove(id);
     }
 
 }

@@ -2,6 +2,8 @@ package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,32 +19,44 @@ public class TecnicoController {
     }
 
     @PostMapping
-    public Tecnico incluir(@RequestBody Tecnico tecnico) {
-        return tecnicoService.incluir(tecnico);
+    public ResponseEntity<Tecnico> incluir(@RequestBody Tecnico tecnico) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tecnicoService.incluir(tecnico));
     }
 
     @PutMapping(value = "/{id}")
-    public Tecnico alterar(@PathVariable Integer id, @RequestBody Tecnico tecnico) {
-        return tecnicoService.alterar(id, tecnico);
+    public ResponseEntity<Tecnico> alterar(@PathVariable Integer id, @RequestBody Tecnico tecnico) {
+        Tecnico tecnicoAtualizado = tecnicoService.alterar(id, tecnico);
+
+        if (tecnicoAtualizado == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(tecnicoService.alterar(id, tecnico));
     }
 
     @PatchMapping(value = "/{id}/inativar")
-    public Tecnico inativar(@PathVariable Integer id) {
-        return tecnicoService.inativar(id);
+    public ResponseEntity<Tecnico> inativar(@PathVariable Integer id) {
+        return ResponseEntity.ok(tecnicoService.inativar(id));
     }
 
     @GetMapping(value = "/{id}")
-    public Tecnico obterPorId(@PathVariable Integer id){
-        return tecnicoService.obterPorId(id);
+    public ResponseEntity<Tecnico> obterPorId(@PathVariable Integer id){
+        return ResponseEntity.ok(tecnicoService.obterPorId(id));
     }
 
     @GetMapping
-    public List<Tecnico> obterLista(){
-        return tecnicoService.obterLista();
+    public ResponseEntity<List<Tecnico>> obterLista(){
+        List<Tecnico> lista = tecnicoService.obterLista();
+
+        if(lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(lista);
     }
 
     @DeleteMapping(value = "/{id}")
-    public void excluir(@PathVariable Integer id){
+    public ResponseEntity<Void> excluir(@PathVariable Integer id){
         tecnicoService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }

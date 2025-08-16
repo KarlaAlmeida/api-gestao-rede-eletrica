@@ -1,4 +1,4 @@
-package br.edu.infnet.karlaapi;
+package br.edu.infnet.karlaapi.model.loader;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -42,7 +42,7 @@ public class TecnicoLoader implements ApplicationRunner{
             tecnico.setEmail(campos[2]);
             tecnico.setTelefone(campos[3]);
             tecnico.setUltimoSalario(Double.valueOf(campos[4]));
-            tecnico.setEhAtivo(Boolean.valueOf(campos[5]));
+            tecnico.setAtivo(Boolean.valueOf(campos[5]));
             tecnico.setEspecialidade(campos[6]);
             tecnico.setDisponivel(Boolean.valueOf(campos[7]));
 
