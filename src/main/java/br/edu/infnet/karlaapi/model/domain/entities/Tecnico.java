@@ -1,23 +1,34 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
 public class Tecnico extends Funcionario {
 
-    private Integer id;
+    @Column(name = "especialidade", length = 100)
     private String especialidade;
+    @Column(name = "disponível")
     private boolean disponivel;
+
+    public Tecnico(Integer id, String nome, String cpf, String email, String telefone,
+                   Endereco endereco, double ultimoSalario, boolean ativo,
+                   String especialidade, boolean disponivel) {
+        super(id, nome, cpf, email, telefone, endereco, ultimoSalario, ativo);
+        this.especialidade = especialidade;
+        this.disponivel = disponivel;
+    }
+
+    public Tecnico() {
+    }
 
     @Override
     public String toString() {
-        return String.format("%s - Id: %d - Especialidade: %s - Disponível: %s",
-                super.toString(), id, especialidade, disponivel ? "Sim" : "Não");
+        return String.format("%s - Especialidade: %s - Disponível: %s",
+                super.toString(), especialidade, disponivel ? "Sim" : "Não");
     }
 }

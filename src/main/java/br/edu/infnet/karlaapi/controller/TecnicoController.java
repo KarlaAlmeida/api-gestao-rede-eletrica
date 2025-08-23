@@ -2,31 +2,61 @@ package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/tecnicos")
-@AllArgsConstructor
 public class TecnicoController {
 
-    private TecnicoService tecnicoService;
+    private final TecnicoService tecnicoService;
+
+    public TecnicoController(TecnicoService tecnicoService) {
+        this.tecnicoService = tecnicoService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Tecnico> incluir(@RequestBody Tecnico tecnico) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tecnicoService.incluir(tecnico));
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Tecnico> alterar(@PathVariable Integer id, @RequestBody Tecnico tecnico) {
+        Tecnico tecnicoAtualizado = tecnicoService.alterar(id, tecnico);
+
+        if (tecnicoAtualizado == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(tecnicoService.alterar(id, tecnico));
+    }
+
+    @PatchMapping(value = "/{id}/inativar")
+    public ResponseEntity<Tecnico> inativar(@PathVariable Integer id) {
+        return ResponseEntity.ok(tecnicoService.inativar(id));
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Tecnico> obterPorId(@PathVariable Integer id){
+        return ResponseEntity.ok(tecnicoService.obterPorId(id));
+    }
 
     @GetMapping
-    public Tecnico obterTecnico(){
-        Tecnico tecnico = new Tecnico();
-        tecnico.setNome("Karla");
-        tecnico.setCpf("123456789-00");
-        tecnico.setEmail("karlacrika@gmail.com");
-        tecnico.setTelefone("83996220199");
-        tecnico.setMatricula(1234);
-        tecnico.setUltimoSalario(5000.00);
-        tecnico.setEhAtivo(true);
-        tecnico.setId(1);
-        tecnico.setEspecialidade("Elétrica");
-        tecnico.setDisponivel(true);
-        return tecnico;
+    public ResponseEntity<List<Tecnico>> obterLista(){
+        List<Tecnico> lista = tecnicoService.obterLista();
+
+        if(lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(lista);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Integer id){
+        tecnicoService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }
