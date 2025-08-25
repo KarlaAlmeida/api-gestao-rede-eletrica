@@ -1,9 +1,9 @@
 package br.edu.infnet.karlaapi.controller;
 
-import br.edu.infnet.karlaapi.model.domain.dto.OcorrenciaRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrecia;
 import br.edu.infnet.karlaapi.model.service.OcorreciaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +21,13 @@ public class OcorrenciaController {
     }
 
     @PostMapping
-    public ResponseEntity<Ocorrencia> incluir(@RequestBody OcorrenciaRequestDTO dto) {
+    public ResponseEntity<Ocorrencia> incluir(@Valid @RequestBody OcorrenciaRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ocorreciaService.incluir(dto));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Ocorrencia> alterar(@PathVariable Integer id,
-                                              @RequestBody OcorrenciaRequestDTO dto) {
+                                              @Valid @RequestBody OcorrenciaRequestDTO dto) {
 
         if (dto == null) {
             return ResponseEntity.noContent().build();
@@ -38,8 +38,8 @@ public class OcorrenciaController {
 
     @PatchMapping(value = "/{id}/status")
     public ResponseEntity<Ocorrencia> alterarStatus(@PathVariable Integer id,
-                                    @RequestParam StatusOcorrecia status){
-        return ResponseEntity.ok(ocorreciaService.alterarStatus(id, status));
+                                                    @RequestParam String statusOcorrencia){
+        return ResponseEntity.ok(ocorreciaService.alterarStatus(id, statusOcorrencia));
     }
 
     @GetMapping(value = "/{id}")

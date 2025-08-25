@@ -1,12 +1,12 @@
 package br.edu.infnet.karlaapi.model.service;
 
-import br.edu.infnet.karlaapi.model.domain.dto.OrdemServicoRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoAlteraDataConclusaoDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
 import br.edu.infnet.karlaapi.model.domain.entities.OrdemServico;
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
-import br.edu.infnet.karlaapi.model.infraestructure.exceptions.AtributoInvalidoException;
-import br.edu.infnet.karlaapi.model.infraestructure.exceptions.IDNaoEncontradoException;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.OcorrenciaRepository;
 import br.edu.infnet.karlaapi.model.repository.OrdemServicoRepository;
 import br.edu.infnet.karlaapi.model.repository.TecnicoRepository;
@@ -30,26 +30,10 @@ public class OrdemServicoService {
         this.tecnicoRepository = tecnicoRepository;
     }
 
-    private void validar(OrdemServicoRequestDTO dto) {
-        if(dto == null) {
-            throw new IllegalArgumentException("A ordem de serviço não pode estar nula!");
-        }
-
-        if(dto.getOcorrenciaId() == null ||
-                dto.getTecnicoId() == null ||
-                dto.getDescricaoServico() == null) {
-            throw new AtributoInvalidoException("Todas as informações devem ser preenchidas!");
-        }
-    }
-
     public OrdemServico incluir(OrdemServicoRequestDTO dto) {
-        validar(dto);
 
-        Ocorrencia ocorrencia = ocorrenciaRepository.findById(dto.getOcorrenciaId())
-                .orElseThrow(() -> new RuntimeException("Ocorrência não encontrada"));
-
-        Tecnico tecnico = tecnicoRepository.findById(dto.getTecnicoId())
-                .orElseThrow(() -> new RuntimeException("Técnico não encontrado"));
+        Ocorrencia ocorrencia = obterOcorrenciaPorId(dto.getOcorrenciaId());
+        Tecnico tecnico = obterTecnicoPorId(dto.getTecnicoId());
 
         OrdemServico ordemServico = new OrdemServico();
         ordemServico.setOcorrencia(ocorrencia);
@@ -62,55 +46,56 @@ public class OrdemServicoService {
     }
 
     public OrdemServico alterar(Integer id, OrdemServicoRequestDTO dto) {
-        validar(dto);
 
-        OrdemServico ordemServico = ordemServicoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ordem de Serviço não encontrada."));
+        OrdemServico ordemServico = obterPorId(id);
+        Ocorrencia ocorrencia = obterOcorrenciaPorId(dto.getOcorrenciaId());
+        Tecnico tecnico = obterTecnicoPorId(dto.getTecnicoId());
 
-        Integer tecnicoId = dto.getTecnicoId();
-
-        Tecnico tecnico = tecnicoRepository.findById(tecnicoId)
-                .orElseThrow(() -> new RuntimeException("Técnico não encontrado."));
-
+        ordemServico.setOcorrencia(ocorrencia);
         ordemServico.setTecnico(tecnico);
         ordemServico.setDescricaoServico(dto.getDescricaoServico());
 
         return ordemServicoRepository.save(ordemServico);
     }
 
-    public OrdemServico alterarStatus(Integer id, StatusOS status){
+    public OrdemServico alterarStatus(Integer id, String statusNovo){
         OrdemServico ordemServico = obterPorId(id);
 
-        if(ordemServico == null) {
-            throw new IllegalArgumentException("Não foi possível obter a ordem de serviço pelo ID " + id);
+        StatusOS statusOSNovo = StatusOS.fromString(statusNovo);
+
+        if(statusOSNovo.equals(ordemServico.getStatusOS())){
+            throw new IllegalStateException("O status atual da ordem de serviço já é " + statusOSNovo);
         }
 
-        if(status.equals(ordemServico.getStatusOS())){
-            throw new IllegalStateException("O status atual da ordem de serviço já é " + status);
-        }
-
-        ordemServico.setStatusOS(status);
+        ordemServico.setStatusOS(statusOSNovo);
         return ordemServicoRepository.save(ordemServico);
     }
 
-    public OrdemServico alterarDataConclusao(Integer id, LocalDate dataConclusao){
+    public OrdemServico alterarDataConclusao(Integer id, OrdemServicoAlteraDataConclusaoDTO dataConclusaoDTO){
         OrdemServico ordemServico = obterPorId(id);
 
-        if(ordemServico == null) {
-            throw new IllegalArgumentException("Não foi possível obter a ordem de serviço pelo ID " + id);
+        if(dataConclusaoDTO.equals(ordemServico.getDataConclusaoOS())){
+            throw new IllegalStateException(
+                    "A data de conclusão atual da ordem de serviço já é " + dataConclusaoDTO);
         }
 
-        if(dataConclusao.equals(ordemServico.getDataConclusaoOS())){
-            throw new IllegalStateException("A data de conclusão atual da ordem de serviço já é " + dataConclusao);
-        }
-
-        ordemServico.setDataConclusaoOS(dataConclusao);
+        ordemServico.setDataConclusaoOS(dataConclusaoDTO.getDataConclusaoOS());
         return ordemServicoRepository.save(ordemServico);
     }
 
     public OrdemServico obterPorId(Integer id) {
         return ordemServicoRepository.findById(id).orElseThrow(()->
-                new IDNaoEncontradoException("A ordem de serviço com ID " + id + " não foi encontrado."));
+                new ResourceNotFoundException("A ordem de serviço com ID " + id + " não foi encontrada."));
+    }
+
+    public Ocorrencia obterOcorrenciaPorId(Integer id){
+        return ocorrenciaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ocorrência não encontrada pelo ID " + id));
+    }
+
+    public Tecnico obterTecnicoPorId(Integer id){
+        return tecnicoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Técnico não encontrado pelo ID " + id));
     }
 
     public List<OrdemServico> obterLista() {
@@ -118,9 +103,7 @@ public class OrdemServicoService {
     }
 
     public void excluir(Integer id) {
-        OrdemServico ordemServico = ordemServicoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ordem de Serviço não encontrada."));
-
+        OrdemServico ordemServico = obterPorId(id);
         ordemServicoRepository.delete(ordemServico);
     }
 

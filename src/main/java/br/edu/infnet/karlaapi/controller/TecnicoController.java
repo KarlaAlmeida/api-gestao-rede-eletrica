@@ -2,6 +2,7 @@ package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +20,15 @@ public class TecnicoController {
     }
 
     @PostMapping
-    public ResponseEntity<Tecnico> incluir(@RequestBody Tecnico tecnico) {
+    public ResponseEntity<Tecnico> incluir(@Valid @RequestBody Tecnico tecnico) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tecnicoService.incluir(tecnico));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Tecnico> alterar(@PathVariable Integer id, @RequestBody Tecnico tecnico) {
-        Tecnico tecnicoAtualizado = tecnicoService.alterar(id, tecnico);
+    public ResponseEntity<Tecnico> alterar(@PathVariable Integer id,
+                                           @Valid @RequestBody Tecnico tecnico) {
 
-        if (tecnicoAtualizado == null) {
+        if (tecnico == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(tecnicoService.alterar(id, tecnico));

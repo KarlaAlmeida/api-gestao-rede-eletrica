@@ -1,11 +1,11 @@
 package br.edu.infnet.karlaapi.model.service;
 
-import br.edu.infnet.karlaapi.model.domain.dto.OcorrenciaRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrecia;
-import br.edu.infnet.karlaapi.model.infraestructure.exceptions.AtributoInvalidoException;
-import br.edu.infnet.karlaapi.model.infraestructure.exceptions.IDNaoEncontradoException;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.AtivoRepository;
 import br.edu.infnet.karlaapi.model.repository.OcorrenciaRepository;
 import org.springframework.stereotype.Service;
@@ -24,66 +24,56 @@ public class OcorreciaService{
         this.ativoRepository = ativoRepository;
     }
 
-    private void validar(OcorrenciaRequestDTO dto) {
-        if(dto == null) {
-            throw new IllegalArgumentException("A ocorrência não pode estar nula!");
-        }
+     public Ocorrencia incluir(OcorrenciaRequestDTO dto) {
 
-        if(dto.getAtivoId() == null ||
-                dto.getDescricaoOcorrencia() == null ||
-                dto.getPrioridadeOcorrecia() == null) {
-            throw new AtributoInvalidoException("Todas as informações devem ser preenchidas!");
-        }
-    }
-
-    public Ocorrencia incluir(OcorrenciaRequestDTO dto) {
-        validar(dto);
-
-        Ativo ativo = ativoRepository.findById(dto.getAtivoId())
-                .orElseThrow(() -> new RuntimeException("Ativo não encontrado"));
+        Ativo ativo = obterAtivoPorId(dto.getAtivoId());
 
         Ocorrencia ocorrencia = new Ocorrencia();
         ocorrencia.setAtivo(ativo);
         ocorrencia.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
         ocorrencia.setDataRegistroOcorrencia(LocalDate.now());
-        ocorrencia.setPrioridadeOcorrecia(dto.getPrioridadeOcorrecia());
-        ocorrencia.setStatusOcorrecia(StatusOcorrecia.REGISTRADA);
+        ocorrencia.setPrioridadeOcorrencia(PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia()));
+        ocorrencia.setStatusOcorrencia(StatusOcorrencia.REGISTRADA);
 
         return ocorrenciaRepository.save(ocorrencia);
     }
 
     public Ocorrencia alterar(Integer id, OcorrenciaRequestDTO dto) {
 
-        validar(dto);
+        Ocorrencia ocorrencia = obterPorId(id);
+        Ativo ativo = obterAtivoPorId(dto.getAtivoId());
 
-        Ocorrencia ocorrencia = ocorrenciaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ocorrência não encontrada"));
+        ocorrencia.setAtivo(ativo);
 
         ocorrencia.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
-        ocorrencia.setPrioridadeOcorrecia(dto.getPrioridadeOcorrecia());
+
+        PrioridadeOcorrencia prioridadeOcorrencia = PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia());
+        ocorrencia.setPrioridadeOcorrencia(prioridadeOcorrencia);
 
         return ocorrenciaRepository.save(ocorrencia);
     }
 
-    public Ocorrencia alterarStatus(Integer id, StatusOcorrecia status){
+    public Ocorrencia alterarStatus(Integer id, String statusNovo){
         Ocorrencia ocorrencia = obterPorId(id);
 
-        if(ocorrencia == null) {
-            throw new IllegalArgumentException("Não foi possível obter a ocorrência pelo ID " + id);
+        StatusOcorrencia statusOcorrenciaNovo = StatusOcorrencia.fromString(statusNovo);
+
+        if(statusOcorrenciaNovo.equals(ocorrencia.getStatusOcorrencia())){
+            throw new IllegalStateException("O status atual da ocorrência já é " + statusOcorrenciaNovo);
         }
 
-        if(status.equals(ocorrencia.getStatusOcorrecia())){
-            throw new IllegalStateException("O status atual da ocorrência já é " + status);
-        }
-
-        ocorrencia.setStatusOcorrecia(status);
+        ocorrencia.setStatusOcorrencia(statusOcorrenciaNovo);
         return ocorrenciaRepository.save(ocorrencia);
     }
-
 
     public Ocorrencia obterPorId(Integer id) {
        return ocorrenciaRepository.findById(id).orElseThrow(()->
-                new IDNaoEncontradoException("A ocorrência com ID " + id + " não foi encontrado."));
+                new ResourceNotFoundException("A ocorrência com ID " + id + " não foi encontrada."));
+    }
+
+    public Ativo obterAtivoPorId(Integer id) {
+        return ativoRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("Ativo não encontrado pelo ID " + id));
     }
 
     public List<Ocorrencia> obterLista() {
@@ -91,9 +81,7 @@ public class OcorreciaService{
     }
 
     public void excluir(Integer id) {
-        Ocorrencia ocorrencia = ocorrenciaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("A ocorrência com ID" + id + " não foi encontrado."));
-
+        Ocorrencia ocorrencia = obterPorId(id);
         ocorrenciaRepository.delete(ocorrencia);
     }
 

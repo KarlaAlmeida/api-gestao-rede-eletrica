@@ -3,9 +3,9 @@ package br.edu.infnet.karlaapi.model.loader;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrecia;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrecia;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
 import br.edu.infnet.karlaapi.model.service.OcorreciaService;
 import org.springframework.boot.ApplicationArguments;
@@ -63,8 +63,8 @@ public class OcorrenciaLoader implements ApplicationRunner{
 
             ocorrencia.setDescricaoOcorrencia(campos[9]);
             ocorrencia.setDataRegistroOcorrencia(LocalDate.now());
-            ocorrencia.setPrioridadeOcorrecia(PrioridadeOcorrecia.valueOf(campos[10]));
-            ocorrencia.setStatusOcorrecia(StatusOcorrecia.REGISTRADA);
+            ocorrencia.setPrioridadeOcorrencia(PrioridadeOcorrencia.valueOf(campos[10]));
+            ocorrencia.setStatusOcorrencia(StatusOcorrencia.REGISTRADA);
 
            // ocorreciaService.incluir(ocorrencia);
 

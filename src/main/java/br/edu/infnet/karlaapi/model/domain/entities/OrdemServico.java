@@ -2,6 +2,7 @@ package br.edu.infnet.karlaapi.model.domain.entities;
 
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,10 +27,14 @@ public class OrdemServico {
 
     @Column(name = "descricao_servico", length = 100)
     private String descricaoServico;
+
     @Column(name = "data_criacao_OS", length = 100)
     private LocalDate dataCriacaoOS;
+
     @Column(name = "data_conclusao_OS", length = 100)
+    @PastOrPresent
     private LocalDate dataConclusaoOS;
+
     @Enumerated(EnumType.STRING)
     private StatusOS statusOS;
 

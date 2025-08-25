@@ -59,8 +59,8 @@ public class OrdemServicoLoader implements ApplicationRunner{
             ocorrencia.setAtivo(ativo);
             ocorrencia.setDescricaoOcorrencia(campos[10]);
             ocorrencia.setDataRegistroOcorrencia(LocalDate.now());
-            ocorrencia.setPrioridadeOcorrecia(PrioridadeOcorrecia.valueOf(campos[11]));
-            ocorrencia.setStatusOcorrecia(StatusOcorrecia.REGISTRADA);
+            ocorrencia.setPrioridadeOcorrencia(PrioridadeOcorrencia.valueOf(campos[11]));
+            ocorrencia.setStatusOcorrencia(StatusOcorrencia.REGISTRADA);
 
             Tecnico tecnico = new Tecnico();
             tecnico.setNome(campos[12]);
