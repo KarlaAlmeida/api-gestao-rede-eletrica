@@ -2,7 +2,7 @@ package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.service.OcorreciaService;
+import br.edu.infnet.karlaapi.model.service.OcorrenciaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +14,15 @@ import java.util.List;
 @RequestMapping("api/ocorrencias")
 public class OcorrenciaController {
 
-    private final OcorreciaService ocorreciaService;
+    private final OcorrenciaService ocorrenciaService;
 
-    public OcorrenciaController(OcorreciaService ocorreciaService) {
-        this.ocorreciaService = ocorreciaService;
+    public OcorrenciaController(OcorrenciaService ocorrenciaService) {
+        this.ocorrenciaService = ocorrenciaService;
     }
 
     @PostMapping
     public ResponseEntity<Ocorrencia> incluir(@Valid @RequestBody OcorrenciaRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ocorreciaService.incluir(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaService.incluir(dto));
     }
 
     @PutMapping(value = "/{id}")
@@ -32,26 +32,26 @@ public class OcorrenciaController {
         if (dto == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(ocorreciaService.alterar(id, dto));
+        return ResponseEntity.ok(ocorrenciaService.alterar(id, dto));
 
     }
 
     @PatchMapping(value = "/{id}/status")
     public ResponseEntity<Ocorrencia> alterarStatus(@PathVariable Integer id,
                                                     @RequestParam String statusOcorrencia){
-        return ResponseEntity.ok(ocorreciaService.alterarStatus(id, statusOcorrencia));
+        return ResponseEntity.ok(ocorrenciaService.alterarStatus(id, statusOcorrencia));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Ocorrencia> obterPorId(@PathVariable Integer id){
 
-        return ResponseEntity.ok(ocorreciaService.obterPorId(id));
+        return ResponseEntity.ok(ocorrenciaService.obterPorId(id));
     }
 
     @GetMapping
     public ResponseEntity<List<Ocorrencia>> obterLista(){
 
-        List<Ocorrencia> lista = ocorreciaService.obterLista();
+        List<Ocorrencia> lista = ocorrenciaService.obterLista();
 
         if(lista.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -62,7 +62,7 @@ public class OcorrenciaController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Integer id){
-        ocorreciaService.excluir(id);
+        ocorrenciaService.excluir(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -48,8 +48,11 @@ public class OrdemServicoService {
     public OrdemServico alterar(Integer id, OrdemServicoRequestDTO dto) {
 
         OrdemServico ordemServico = obterPorId(id);
+        ordemServico.setId(id);
         Ocorrencia ocorrencia = obterOcorrenciaPorId(dto.getOcorrenciaId());
+        ocorrencia.setId(id);
         Tecnico tecnico = obterTecnicoPorId(dto.getTecnicoId());
+        tecnico.setId(id);
 
         ordemServico.setOcorrencia(ocorrencia);
         ordemServico.setTecnico(tecnico);

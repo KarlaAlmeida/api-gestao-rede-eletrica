@@ -14,12 +14,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class OcorreciaService{
+public class OcorrenciaService {
 
     private final OcorrenciaRepository ocorrenciaRepository;
     private final AtivoRepository ativoRepository;
 
-    public OcorreciaService(OcorrenciaRepository ocorrenciaRepository, AtivoRepository ativoRepository) {
+    public OcorrenciaService(OcorrenciaRepository ocorrenciaRepository, AtivoRepository ativoRepository) {
         this.ocorrenciaRepository = ocorrenciaRepository;
         this.ativoRepository = ativoRepository;
     }
@@ -41,7 +41,9 @@ public class OcorreciaService{
     public Ocorrencia alterar(Integer id, OcorrenciaRequestDTO dto) {
 
         Ocorrencia ocorrencia = obterPorId(id);
+        ocorrencia.setId(id);
         Ativo ativo = obterAtivoPorId(dto.getAtivoId());
+        ativo.setId(id);
 
         ocorrencia.setAtivo(ativo);
 

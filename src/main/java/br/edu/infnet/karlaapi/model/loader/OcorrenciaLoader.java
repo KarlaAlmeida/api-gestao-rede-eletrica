@@ -7,7 +7,7 @@ import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
-import br.edu.infnet.karlaapi.model.service.OcorreciaService;
+import br.edu.infnet.karlaapi.model.service.OcorrenciaService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -21,10 +21,10 @@ import java.time.LocalDate;
 @Order(3)
 public class OcorrenciaLoader implements ApplicationRunner{
 
-    private final OcorreciaService ocorreciaService;
+    private final OcorrenciaService ocorrenciaService;
 
-    public OcorrenciaLoader(OcorreciaService ocorreciaService) {
-        this.ocorreciaService = ocorreciaService;
+    public OcorrenciaLoader(OcorrenciaService ocorrenciaService) {
+        this.ocorrenciaService = ocorrenciaService;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class OcorrenciaLoader implements ApplicationRunner{
             linha = leitura.readLine();
         }
 
-        System.out.println(" - " + ocorreciaService.obterLista().size());
+        System.out.println(" - " + ocorrenciaService.obterLista().size());
 
         leitura.close();
     }
