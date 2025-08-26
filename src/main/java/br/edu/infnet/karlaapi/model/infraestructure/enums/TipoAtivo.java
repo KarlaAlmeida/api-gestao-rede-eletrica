@@ -14,6 +14,6 @@ public enum TipoAtivo {
         }
         throw new IllegalArgumentException(
                 "Tipo de Ativo " + value + " inválido. " +
-                        "O Status deve ser APOSTE, TRANSFORMADOR, CHAVE_FUSIVEL, PARA_RAIOS ou REGULADOR.");
+                        "O Status deve ser POSTE, TRANSFORMADOR, CHAVE_FUSIVEL, PARA_RAIOS ou REGULADOR.");
     }
 }

@@ -1,7 +1,10 @@
 package br.edu.infnet.karlaapi.model.service;
 
+import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
+import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.AtivoRepository;
 import org.springframework.stereotype.Service;
@@ -9,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AtivoService implements CrudService<Ativo, Integer>{
+public class AtivoService{
 
     private final AtivoRepository ativoRepository;
 
@@ -17,15 +20,30 @@ public class AtivoService implements CrudService<Ativo, Integer>{
         this.ativoRepository = ativoRepository;
     }
 
-    public Ativo incluir(Ativo ativo) {
+    public Ativo incluir(AtivoRequestDTO ativoDTO) {
+
+        Ativo ativo = new Ativo();
+        ativo.setTipoAtivo(TipoAtivo.fromString(ativoDTO.getTipoAtivo()));
+        ativo.setDataInstalacao(ativoDTO.getDataInstalacao());
+        ativo.setStatusAtivo(StatusAtivo.ATIVO);
+
+        Endereco endereco = ativoDTO.getEndereco();
+        ativo.setEndereco(endereco);
+
         return ativoRepository.save(ativo);
     }
 
-    @Override
-    public Ativo alterar(Integer id, Ativo ativoAtualizado) {
-        obterPorId(id);
-        ativoAtualizado.setId(id);
-        return ativoRepository.save(ativoAtualizado);
+    public Ativo alterar(Integer id, AtivoRequestDTO ativoDTO) {
+
+        Ativo ativo = obterPorId(id);
+        ativo.setId(id);
+        ativo.setTipoAtivo(TipoAtivo.fromString(ativoDTO.getTipoAtivo()));
+        ativo.setDataInstalacao(ativoDTO.getDataInstalacao());
+
+        Endereco endereco = ativoDTO.getEndereco();
+        ativo.setEndereco(endereco);
+
+        return ativoRepository.save(ativo);
     }
 
     public Ativo alterarStatus(Integer id, String status){
@@ -41,18 +59,15 @@ public class AtivoService implements CrudService<Ativo, Integer>{
         return ativoRepository.save(ativo);
     }
 
-    @Override
     public Ativo obterPorId(Integer id) {
         return ativoRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("O ativo com ID " + id + " não foi encontrado."));
     }
 
-    @Override
     public List<Ativo> obterLista() {
         return ativoRepository.findAll();
     }
 
-    @Override
     public void excluir(Integer id) {
         Ativo ativo = obterPorId(id);
         ativoRepository.delete(ativo);

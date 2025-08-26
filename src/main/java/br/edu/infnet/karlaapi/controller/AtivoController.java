@@ -1,5 +1,6 @@
 package br.edu.infnet.karlaapi.controller;
 
+import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.service.AtivoService;
 import jakarta.validation.Valid;
@@ -20,18 +21,18 @@ public class AtivoController {
     }
 
     @PostMapping
-    public ResponseEntity<Ativo> incluir(@Valid @RequestBody Ativo ativo) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ativoService.incluir(ativo));
+    public ResponseEntity<Ativo> incluir(@Valid @RequestBody AtivoRequestDTO ativoDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ativoService.incluir(ativoDTO));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Ativo> alterar(@PathVariable Integer id,
-                                         @Valid @RequestBody Ativo ativo) {
+                                         @Valid @RequestBody AtivoRequestDTO ativoDTO) {
 
-        if (ativo == null) {
+        if (ativoDTO == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(ativoService.alterar(id, ativo));
+        return ResponseEntity.ok(ativoService.alterar(id, ativoDTO));
 
     }
 
