@@ -1,8 +1,9 @@
 package br.edu.infnet.karlaapi.controller;
 
+import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
 import br.edu.infnet.karlaapi.model.service.AtivoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,22 +21,24 @@ public class AtivoController {
     }
 
     @PostMapping
-    public ResponseEntity<Ativo> incluir(@RequestBody Ativo ativo) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ativoService.incluir(ativo));
+    public ResponseEntity<Ativo> incluir(@Valid @RequestBody AtivoRequestDTO ativoDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ativoService.incluir(ativoDTO));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Ativo> alterar(@PathVariable Integer id, @RequestBody Ativo ativo) {
+    public ResponseEntity<Ativo> alterar(@PathVariable Integer id,
+                                         @Valid @RequestBody AtivoRequestDTO ativoDTO) {
 
-        if (ativo == null) {
+        if (ativoDTO == null) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(ativoService.alterar(id, ativo));
+        return ResponseEntity.ok(ativoService.alterar(id, ativoDTO));
 
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Ativo> alterarStatus(@PathVariable Integer id, @RequestParam StatusAtivo status){
+    public ResponseEntity<Ativo> alterarStatus(@PathVariable Integer id,
+                                               @RequestParam String status){
         return ResponseEntity.ok(ativoService.alterarStatus(id, status));
     }
 

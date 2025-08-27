@@ -1,16 +1,18 @@
 package br.edu.infnet.karlaapi.model.service;
 
+import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
+import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
-import br.edu.infnet.karlaapi.model.infraestructure.exceptions.AtributoInvalidoException;
-import br.edu.infnet.karlaapi.model.infraestructure.exceptions.IDNaoEncontradoException;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.AtivoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class AtivoService implements CrudService<Ativo, Integer>{
+public class AtivoService{
 
     private final AtivoRepository ativoRepository;
 
@@ -18,80 +20,57 @@ public class AtivoService implements CrudService<Ativo, Integer>{
         this.ativoRepository = ativoRepository;
     }
 
-    private void validar(Ativo ativo) {
-        if(ativo == null) {
-            throw new IllegalArgumentException("O ativo não pode estar nulo!");
-        }
+    public Ativo incluir(AtivoRequestDTO ativoDTO) {
 
-        if(ativo.getTipoAtivo() == null) {
-            throw new AtributoInvalidoException("O tipo do ativo é uma informação obrigatória!");
-        }
-    }
+        Ativo ativo = new Ativo();
+        ativo.setTipoAtivo(TipoAtivo.fromString(ativoDTO.getTipoAtivo()));
+        ativo.setDataInstalacao(ativoDTO.getDataInstalacao());
+        ativo.setStatusAtivo(StatusAtivo.ATIVO);
 
-    @Override
-    public Ativo incluir(Ativo ativo) {
-        validar(ativo);
-
-        if(ativo.getId() != null && ativo.getId() != 0) {
-            throw new IllegalArgumentException("Um novo ativo não pode ter um ID na inclusão!");
-        }
+        Endereco endereco = ativoDTO.getEndereco();
+        ativo.setEndereco(endereco);
 
         return ativoRepository.save(ativo);
     }
 
-    @Override
-    public Ativo alterar(Integer id, Ativo ativoAtualizado) {
+    public Ativo alterar(Integer id, AtivoRequestDTO ativoDTO) {
 
-        if(id == null || id <= 0) {
-            throw new IllegalArgumentException(
-                    "O ID para exclusão não pode ser nulo e deve ser maio que zero.");
-        }
+        Ativo ativo = obterPorId(id);
+        ativo.setId(id);
+        ativo.setTipoAtivo(TipoAtivo.fromString(ativoDTO.getTipoAtivo()));
+        ativo.setDataInstalacao(ativoDTO.getDataInstalacao());
 
-        validar(ativoAtualizado);
-        obterPorId(id);
-        ativoAtualizado.setId(id);
-        return ativoRepository.save(ativoAtualizado);
+        Endereco endereco = ativoDTO.getEndereco();
+        ativo.setEndereco(endereco);
+
+        return ativoRepository.save(ativo);
     }
 
-    public Ativo alterarStatus(Integer id, StatusAtivo status){
+    public Ativo alterarStatus(Integer id, String status){
         Ativo ativo = obterPorId(id);
 
-        if(ativo == null) {
-            throw new IllegalArgumentException("Não foi possível obter o ativo pelo ID " + id);
-        }
+        StatusAtivo statusNovo = StatusAtivo.fromString(status);
 
-        if(status.equals(ativo.getStatusAtivo())){
+        if(statusNovo.equals(ativo.getStatusAtivo())){
             throw new IllegalStateException("O status atual do ativo já é " + status);
         }
 
-        ativo.setStatusAtivo(status);
+        ativo.setStatusAtivo(statusNovo);
         return ativoRepository.save(ativo);
     }
 
-    @Override
     public Ativo obterPorId(Integer id) {
-
         return ativoRepository.findById(id).orElseThrow(()->
-                new IDNaoEncontradoException("O ativo com ID " + id + " não foi encontrado."));
+                new ResourceNotFoundException("O ativo com ID " + id + " não foi encontrado."));
     }
 
-    @Override
     public List<Ativo> obterLista() {
-
         return ativoRepository.findAll();
     }
 
-    @Override
     public void excluir(Integer id) {
-
-        if(id == null || id <= 0) {
-            throw new IllegalArgumentException(
-                    "O ID para exclusão não pode ser nulo e deve ser maio que zero.");
-        }
-
         Ativo ativo = obterPorId(id);
         ativoRepository.delete(ativo);
-
     }
 
 }

@@ -54,7 +54,7 @@ public class AtivoLoader implements ApplicationRunner{
             ativo.setDataInstalacao(LocalDate.parse(campos[7]));
             ativo.setStatusAtivo(StatusAtivo.valueOf(campos[8]));
 
-            ativoService.incluir(ativo);
+            //ativoService.incluir(ativo);
 
             System.out.println(ativo);
 

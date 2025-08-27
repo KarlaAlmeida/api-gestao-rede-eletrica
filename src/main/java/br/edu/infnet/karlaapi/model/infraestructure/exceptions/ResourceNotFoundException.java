@@ -1,10 +1,10 @@
 package br.edu.infnet.karlaapi.model.infraestructure.exceptions;
 
-public class IDNaoEncontradoException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public IDNaoEncontradoException(String mensagem) {
+    public ResourceNotFoundException(String mensagem) {
         super(mensagem);
     }
 }

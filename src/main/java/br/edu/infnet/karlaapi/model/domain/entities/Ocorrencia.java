@@ -1,7 +1,7 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
-import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrecia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrecia;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
+import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,24 +21,27 @@ public class Ocorrencia {
     @JoinColumn(name = "ativo_id")
     private Ativo ativo;
 
-    @Column(name = "descricao_ocorrencia", length = 100)
+    @Column(name = "descricao_ocorrencia")
     private String descricaoOcorrencia;
-    @Column(name = "data_ocorrencia", length = 100)
+
+    @Enumerated(EnumType.STRING)
+    private PrioridadeOcorrencia prioridadeOcorrencia;
+
+    @Column(name = "data_ocorrencia")
     private LocalDate dataRegistroOcorrencia;
+
     @Enumerated(EnumType.STRING)
-    private PrioridadeOcorrecia prioridadeOcorrecia;
-    @Enumerated(EnumType.STRING)
-    private StatusOcorrecia statusOcorrecia;
+    private StatusOcorrencia statusOcorrencia;
 
     public Ocorrencia(Integer id, Ativo ativo, String descricaoOcorrencia,
-                      LocalDate dataRegistroOcorrencia, PrioridadeOcorrecia prioridadeOcorrecia,
-                      StatusOcorrecia statusOcorrecia) {
+                      LocalDate dataRegistroOcorrencia, PrioridadeOcorrencia prioridadeOcorrencia,
+                      StatusOcorrencia statusOcorrencia) {
         this.id = id;
         this.ativo = ativo;
         this.descricaoOcorrencia = descricaoOcorrencia;
         this.dataRegistroOcorrencia = dataRegistroOcorrencia;
-        this.prioridadeOcorrecia = prioridadeOcorrecia;
-        this.statusOcorrecia = statusOcorrecia;
+        this.prioridadeOcorrencia = prioridadeOcorrencia;
+        this.statusOcorrencia = statusOcorrencia;
     }
 
     public Ocorrencia() {
@@ -49,6 +52,6 @@ public class Ocorrencia {
         return String.format("Ocorrência - ID: %d - %s - Descrição: %s - Data da Ocorrência %s" +
                         " Prioridade: %s - Status: %s",
                 id, ativo, descricaoOcorrencia, dataRegistroOcorrencia,
-                prioridadeOcorrecia, statusOcorrecia);
+                prioridadeOcorrencia, statusOcorrencia);
     }
 }
