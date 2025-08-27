@@ -2,11 +2,14 @@ package br.edu.infnet.karlaapi.model.domain.entities;
 
 import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -32,6 +35,10 @@ public class Ocorrencia {
 
     @Enumerated(EnumType.STRING)
     private StatusOcorrencia statusOcorrencia;
+
+    @OneToMany(mappedBy = "ocorrencia", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<OrdemServico> ordensServico = new ArrayList<>();
 
     public Ocorrencia(Integer id, Ativo ativo, String descricaoOcorrencia,
                       LocalDate dataRegistroOcorrencia, PrioridadeOcorrencia prioridadeOcorrencia,
