@@ -55,6 +55,12 @@ public class TecnicoController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("filtro/nome-e-especialidade")
+    public List<Tecnico> buscarPorNomeEspecialidade(@RequestParam String nomePrefixo,
+                                                    @RequestParam String especialidade) {
+        return tecnicoService.buscarPorNomeEspecialidade(nomePrefixo, especialidade);
+    }
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Integer id){
         tecnicoService.excluir(id);
