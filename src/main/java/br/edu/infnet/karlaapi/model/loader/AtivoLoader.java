@@ -1,5 +1,6 @@
 package br.edu.infnet.karlaapi.model.loader;
 
+import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
@@ -38,7 +39,7 @@ public class AtivoLoader implements ApplicationRunner{
 
             campos = linha.split(";");
 
-            Ativo ativo = new Ativo();
+            AtivoRequestDTO ativo = new AtivoRequestDTO();
 
             Endereco endereco = new Endereco();
             endereco.setCep(campos[0]);
@@ -50,11 +51,11 @@ public class AtivoLoader implements ApplicationRunner{
 
             ativo.setEndereco(endereco);
 
-            ativo.setTipoAtivo(TipoAtivo.valueOf(campos[6]));
+            ativo.setTipoAtivo(campos[6]);
             ativo.setDataInstalacao(LocalDate.parse(campos[7]));
-            ativo.setStatusAtivo(StatusAtivo.valueOf(campos[8]));
 
-            //ativoService.incluir(ativo);
+
+            ativoService.incluir(ativo);
 
             System.out.println(ativo);
 

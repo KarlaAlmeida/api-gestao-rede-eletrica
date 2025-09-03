@@ -1,6 +1,9 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
@@ -19,10 +22,12 @@ public class OrdemServico {
 
     @ManyToOne
     @JoinColumn(name = "ocorrencia_id")
+    @JsonBackReference
     private Ocorrencia ocorrencia;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "tecnico_id")
+    @JsonBackReference
     private Tecnico tecnico;
 
     @Column(name = "descricao_servico", length = 100)

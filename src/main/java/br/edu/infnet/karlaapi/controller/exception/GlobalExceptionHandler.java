@@ -50,10 +50,10 @@ public class GlobalExceptionHandler {
         }
 
         errors.put("Data/hora", LocalDateTime.now().toString());
-        errors.put("Status", HttpStatus.BAD_REQUEST.toString());
+        errors.put("Status", HttpStatus.METHOD_NOT_ALLOWED.toString());
         errors.put("Mensagem", mensagem);
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     // Para @RequestParam ausente

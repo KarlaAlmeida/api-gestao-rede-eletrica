@@ -5,10 +5,12 @@ import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.OrdemServico;
 import br.edu.infnet.karlaapi.model.service.OrdemServicoService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -63,6 +65,19 @@ public class OrdemServicoController {
         }
 
         return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/tecnico/{cpf}")
+    public List<OrdemServico> listarPorTecnico(@PathVariable String cpf) {
+        return ordemServicoService.listarPorTecnico(cpf);
+    }
+
+    @GetMapping("filtro/descricao-e-periodo")
+    public List<OrdemServico> filtrarPorDescricaoServicoEPeriodo(
+            @RequestParam String descricaoBusca,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
+        return ordemServicoService.filtrarPorDescricaoServicoEPeriodo(descricaoBusca, dataInicio, dataFim);
     }
 
     @DeleteMapping(value = "/{id}")

@@ -51,6 +51,12 @@ public class TecnicoService implements CrudService<Tecnico, Integer>{
         return tecnicoRepository.findAll();
     }
 
+    public List<Tecnico> buscarPorNomeEspecialidade(String nomePrefixo, String especialidade) {
+        return tecnicoRepository.
+                findByNomeStartingWithIgnoreCaseAndEspecialidadeIgnoreCase(
+                        nomePrefixo, especialidade);
+    }
+
     @Override
     public void excluir(Integer id) {
         Tecnico tecnico = obterPorId(id);

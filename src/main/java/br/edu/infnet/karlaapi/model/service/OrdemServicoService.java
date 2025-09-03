@@ -33,7 +33,7 @@ public class OrdemServicoService {
     public OrdemServico incluir(OrdemServicoRequestDTO dto) {
 
         Ocorrencia ocorrencia = obterOcorrenciaPorId(dto.getOcorrenciaId());
-        Tecnico tecnico = obterTecnicoPorId(dto.getTecnicoId());
+        Tecnico tecnico = obterTecnicoPorCPF(dto.getCpfTecnico());
 
         OrdemServico ordemServico = new OrdemServico();
         ordemServico.setOcorrencia(ocorrencia);
@@ -51,7 +51,7 @@ public class OrdemServicoService {
         ordemServico.setId(id);
         Ocorrencia ocorrencia = obterOcorrenciaPorId(dto.getOcorrenciaId());
         ocorrencia.setId(id);
-        Tecnico tecnico = obterTecnicoPorId(dto.getTecnicoId());
+        Tecnico tecnico = obterTecnicoPorCPF(dto.getCpfTecnico());
         tecnico.setId(id);
 
         ordemServico.setOcorrencia(ocorrencia);
@@ -96,13 +96,25 @@ public class OrdemServicoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Ocorrência não encontrada pelo ID " + id));
     }
 
-    public Tecnico obterTecnicoPorId(Integer id){
-        return tecnicoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Técnico não encontrado pelo ID " + id));
+    public Tecnico obterTecnicoPorCPF(String cpfTecnico){
+        return tecnicoRepository.findByCpf(cpfTecnico)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Técnico não encontrado pelo CPF " + cpfTecnico));
     }
 
     public List<OrdemServico> obterLista() {
         return ordemServicoRepository.findAll();
+    }
+
+    public List<OrdemServico> listarPorTecnico(String cpf) {
+        return ordemServicoRepository.findByTecnicoCpf(cpf);
+    }
+
+    public List<OrdemServico> filtrarPorDescricaoServicoEPeriodo(
+            String descricaoBusca, LocalDate dataInicio, LocalDate dataFim) {
+        return ordemServicoRepository
+                .findByDescricaoServicoContainingIgnoreCaseAndDataCriacaoOSBetween(
+                        descricaoBusca, dataInicio, dataFim);
     }
 
     public void excluir(Integer id) {

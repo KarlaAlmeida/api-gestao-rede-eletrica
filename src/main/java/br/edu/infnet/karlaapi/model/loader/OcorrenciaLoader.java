@@ -1,5 +1,6 @@
 package br.edu.infnet.karlaapi.model.loader;
 
+import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
@@ -41,32 +42,13 @@ public class OcorrenciaLoader implements ApplicationRunner{
 
             campos = linha.split(";");
 
-            Ocorrencia ocorrencia = new Ocorrencia();
+            OcorrenciaRequestDTO ocorrencia = new OcorrenciaRequestDTO();
 
-            Ativo ativo = new Ativo();
+            ocorrencia.setAtivoId(Integer.valueOf(campos[0]));
+            ocorrencia.setDescricaoOcorrencia(campos[1]);
+            ocorrencia.setPrioridadeOcorrencia(campos[2]);
 
-            Endereco endereco = new Endereco();
-            endereco.setCep(campos[0]);
-            endereco.setRua(campos[1]);
-            endereco.setNumero(Integer.valueOf(campos[2]));
-            endereco.setComplemento(campos[3]);
-            endereco.setCidade(campos[4]);
-            endereco.setEstado(campos[5]);
-
-            ativo.setEndereco(endereco);
-            ativo.setTipoAtivo(TipoAtivo.valueOf(campos[6]));
-            ativo.setDataInstalacao(LocalDate.parse(campos[7]));
-            ativo.setStatusAtivo(StatusAtivo.valueOf(campos[8]));
-            ativo.setId(Integer.valueOf(campos[11]));
-
-            ocorrencia.setAtivo(ativo);
-
-            ocorrencia.setDescricaoOcorrencia(campos[9]);
-            ocorrencia.setDataRegistroOcorrencia(LocalDate.now());
-            ocorrencia.setPrioridadeOcorrencia(PrioridadeOcorrencia.valueOf(campos[10]));
-            ocorrencia.setStatusOcorrencia(StatusOcorrencia.REGISTRADA);
-
-           // ocorreciaService.incluir(ocorrencia);
+            ocorrenciaService.incluir(ocorrencia);
 
             System.out.println(ocorrencia);
 
