@@ -1,9 +1,7 @@
 package br.edu.infnet.karlaapi.model.domain.dto.out;
 
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -29,11 +27,8 @@ public class OcorrenciaResponseDTO {
     private LocalDate dataRegistroOcorrencia;
     private StatusOcorrencia statusOcorrencia;
 
-    private List<OrdemServicoResponseDTO> ordensServico;
+    private List<OrdemServicoResponseDTO> ordensServico = new ArrayList<>();
     private List<Integer> idOS;
-    private Tecnico tecnicoOS;
-    private String descricaoServicoOS;
-    private StatusOS statusOS;
     
     public OcorrenciaResponseDTO(Ocorrencia ocorrencia){
         this.setId(ocorrencia.getId());
@@ -42,10 +37,6 @@ public class OcorrenciaResponseDTO {
         this.setPrioridadeOcorrencia(ocorrencia.getPrioridadeOcorrencia());
         this.setDataRegistroOcorrencia(ocorrencia.getDataRegistroOcorrencia());
         this.setStatusOcorrencia(ocorrencia.getStatusOcorrencia());
-        this.ordensServico = ocorrencia.getOrdensServico()
-                .stream()
-                .map(OrdemServicoResponseDTO::new)
-                .collect(Collectors.toList());
     }
 
     @Override

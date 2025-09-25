@@ -11,9 +11,14 @@ import java.util.Optional;
 @Repository
 public interface TecnicoRepository extends JpaRepository<Tecnico, Integer> {
 
+    @Override
+    @EntityGraph(attributePaths = {"ordensServico", "endereco"})
+    List<Tecnico> findAll();
+
+    @EntityGraph(attributePaths = {"ordensServico", "endereco"})
     Optional<Tecnico> findByCpf(String cpf);
 
-    @EntityGraph(attributePaths = "ordensServico")
+    @EntityGraph(attributePaths = {"ordensServico", "endereco"})
     List<Tecnico> findByNomeStartingWithIgnoreCaseAndEspecialidadeIgnoreCase(
             String prefixoNome, String especialidade);
 }

@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -40,11 +38,6 @@ public class TecnicoResponseDTO{
         this.setAtivo(tecnico.isAtivo());
         this.setEspecialidade(tecnico.getEspecialidade());
         this.setDisponivel(tecnico.isDisponivel());
-        this.ordensServico = Optional.ofNullable(tecnico.getOrdensServico())
-                .orElseGet(ArrayList::new)
-                .stream()
-                .map(OrdemServicoResponseDTO::new)
-                .collect(Collectors.toList());
     }
 
 }
