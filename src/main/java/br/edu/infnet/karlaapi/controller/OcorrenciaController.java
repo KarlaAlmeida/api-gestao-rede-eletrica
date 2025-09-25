@@ -1,7 +1,7 @@
 package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
+import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.service.OcorrenciaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,13 +21,13 @@ public class OcorrenciaController {
     }
 
     @PostMapping
-    public ResponseEntity<Ocorrencia> incluir(@Valid @RequestBody OcorrenciaRequestDTO dto) {
+    public ResponseEntity<OcorrenciaResponseDTO> incluir(@Valid @RequestBody OcorrenciaRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ocorrenciaService.incluir(dto));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Ocorrencia> alterar(@PathVariable Integer id,
-                                              @Valid @RequestBody OcorrenciaRequestDTO dto) {
+    public ResponseEntity<OcorrenciaResponseDTO> alterar(@PathVariable Integer id,
+                                                         @Valid @RequestBody OcorrenciaRequestDTO dto) {
 
         if (dto == null) {
             return ResponseEntity.noContent().build();
@@ -37,21 +37,21 @@ public class OcorrenciaController {
     }
 
     @PatchMapping(value = "/{id}/status")
-    public ResponseEntity<Ocorrencia> alterarStatus(@PathVariable Integer id,
+    public ResponseEntity<OcorrenciaResponseDTO> alterarStatus(@PathVariable Integer id,
                                                     @RequestParam String statusOcorrencia){
         return ResponseEntity.ok(ocorrenciaService.alterarStatus(id, statusOcorrencia));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Ocorrencia> obterPorId(@PathVariable Integer id){
+    public ResponseEntity<OcorrenciaResponseDTO> obterPorId(@PathVariable Integer id){
 
         return ResponseEntity.ok(ocorrenciaService.obterPorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Ocorrencia>> obterLista(){
+    public ResponseEntity<List<OcorrenciaResponseDTO>> obterLista(){
 
-        List<Ocorrencia> lista = ocorrenciaService.obterLista();
+        List<OcorrenciaResponseDTO> lista = ocorrenciaService.obterLista();
 
         if(lista.isEmpty()) {
             return ResponseEntity.noContent().build();

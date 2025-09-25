@@ -1,13 +1,6 @@
 package br.edu.infnet.karlaapi.model.loader;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
-import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
-import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
 import br.edu.infnet.karlaapi.model.service.OcorrenciaService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.time.LocalDate;
 
 @Component
 @Order(3)

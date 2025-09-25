@@ -1,21 +1,24 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
+import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Tecnico extends Funcionario {
 
@@ -31,16 +34,24 @@ public class Tecnico extends Funcionario {
     @JsonManagedReference
     private List<OrdemServico> ordensServico = new ArrayList<>();
 
-    public Tecnico(Integer id, String nome, String cpf, String email, String telefone,
-                   Endereco endereco, double ultimoSalario, boolean ativo,
-                   String especialidade, boolean disponivel) {
-        super(id, nome, cpf, email, telefone, endereco, ultimoSalario, ativo);
-        this.especialidade = especialidade;
-        this.disponivel = disponivel;
+    public Tecnico(TecnicoResponseDTO tecnicoResponseDTO){
+        this.setId(tecnicoResponseDTO.getId());
+        this.setNome(tecnicoResponseDTO.getNome());
+        this.setCpf(tecnicoResponseDTO.getCpf());
+        this.setEmail(tecnicoResponseDTO.getEmail());
+        this.setTelefone(tecnicoResponseDTO.getTelefone());
+        this.setEndereco(new EnderecoGeorreferenciado(tecnicoResponseDTO.getEndereco()));
+        this.setUltimoSalario(tecnicoResponseDTO.getUltimoSalario());
+        this.setAtivo(tecnicoResponseDTO.isAtivo());
+        this.setEspecialidade(tecnicoResponseDTO.getEspecialidade());
+        this.setDisponivel(tecnicoResponseDTO.isDisponivel());
+        this.ordensServico = Optional.ofNullable(tecnicoResponseDTO.getOrdensServico())
+                .orElseGet(ArrayList::new)
+                .stream()
+                .map(OrdemServico::new)
+                .collect(Collectors.toList());
     }
 
-    public Tecnico() {
-    }
 
     @Override
     public String toString() {

@@ -1,11 +1,9 @@
 package br.edu.infnet.karlaapi.model.loader;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
-import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
+import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
 import br.edu.infnet.karlaapi.model.service.AtivoService;
+import br.edu.infnet.karlaapi.model.service.EnderecoGeorreferenciadoService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -20,9 +18,12 @@ import java.time.LocalDate;
 public class AtivoLoader implements ApplicationRunner{
 
     private final AtivoService ativoService;
+    private final EnderecoGeorreferenciadoService enderecoGeorreferenciadoService;
 
-    public AtivoLoader(AtivoService ativoService) {
+    public AtivoLoader(AtivoService ativoService,
+                       EnderecoGeorreferenciadoService enderecoGeorreferenciadoService) {
         this.ativoService = ativoService;
+        this.enderecoGeorreferenciadoService = enderecoGeorreferenciadoService;
     }
 
     @Override
@@ -39,23 +40,13 @@ public class AtivoLoader implements ApplicationRunner{
 
             campos = linha.split(";");
 
-            AtivoRequestDTO ativo = new AtivoRequestDTO();
+            AtivoRequestDTO ativoRequestDTO = new AtivoRequestDTO();
 
-            Endereco endereco = new Endereco();
-            endereco.setCep(campos[0]);
-            endereco.setRua(campos[1]);
-            endereco.setNumero(Integer.valueOf(campos[2]));
-            endereco.setComplemento(campos[3]);
-            endereco.setCidade(campos[4]);
-            endereco.setEstado(campos[5]);
+            ativoRequestDTO.setCep(campos[0]);
+            ativoRequestDTO.setTipoAtivo(campos[1]);
+            ativoRequestDTO.setDataInstalacao(LocalDate.parse(campos[2]));
 
-            ativo.setEndereco(endereco);
-
-            ativo.setTipoAtivo(campos[6]);
-            ativo.setDataInstalacao(LocalDate.parse(campos[7]));
-
-
-            ativoService.incluir(ativo);
+            AtivoResponseDTO ativo = ativoService.incluir(ativoRequestDTO);
 
             System.out.println(ativo);
 

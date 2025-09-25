@@ -1,8 +1,10 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
-import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
+import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
@@ -15,62 +17,86 @@ import java.util.List;
 public class AtivoService{
 
     private final AtivoRepository ativoRepository;
+    private final EnderecoGeorreferenciadoService enderecoGeorreferenciadoService;
 
-    public AtivoService(AtivoRepository ativoRepository) {
+    public AtivoService(AtivoRepository ativoRepository,
+                        EnderecoGeorreferenciadoService enderecoGeorreferenciadoService) {
         this.ativoRepository = ativoRepository;
+        this.enderecoGeorreferenciadoService = enderecoGeorreferenciadoService;
     }
 
-    public Ativo incluir(AtivoRequestDTO ativoDTO) {
+    public AtivoResponseDTO incluir(AtivoRequestDTO ativoRequestDTO) {
 
         Ativo ativo = new Ativo();
-        ativo.setTipoAtivo(TipoAtivo.fromString(ativoDTO.getTipoAtivo()));
-        ativo.setDataInstalacao(ativoDTO.getDataInstalacao());
+        ativo.setTipoAtivo(TipoAtivo.fromString(ativoRequestDTO.getTipoAtivo()));
+        ativo.setDataInstalacao(ativoRequestDTO.getDataInstalacao());
         ativo.setStatusAtivo(StatusAtivo.ATIVO);
 
-        Endereco endereco = ativoDTO.getEndereco();
-        ativo.setEndereco(endereco);
+        String cepLimpo = ativoRequestDTO.getCep().replace("-", "");
 
-        return ativoRepository.save(ativo);
+        EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
+                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
+
+        EnderecoGeorreferenciado enderecoGeorreferenciado =
+                new EnderecoGeorreferenciado(enderecoGeorreferenciadoResponseDTO);
+
+        ativo.setEndereco(enderecoGeorreferenciado);
+
+        return new AtivoResponseDTO(ativoRepository.save(ativo));
     }
 
-    public Ativo alterar(Integer id, AtivoRequestDTO ativoDTO) {
+    public AtivoResponseDTO alterar(Integer id, AtivoRequestDTO ativoRequestDTO) {
 
-        Ativo ativo = obterPorId(id);
-        ativo.setId(id);
-        ativo.setTipoAtivo(TipoAtivo.fromString(ativoDTO.getTipoAtivo()));
-        ativo.setDataInstalacao(ativoDTO.getDataInstalacao());
+        AtivoResponseDTO ativoResponseDTO = obterPorId(id);
+        ativoResponseDTO.setId(id);
+        ativoResponseDTO.setTipoAtivo(TipoAtivo.fromString(ativoRequestDTO.getTipoAtivo()));
+        ativoResponseDTO.setDataInstalacao(ativoRequestDTO.getDataInstalacao());
 
-        Endereco endereco = ativoDTO.getEndereco();
-        ativo.setEndereco(endereco);
+        String cepLimpo = ativoRequestDTO.getCep().replace("-", "");
 
-        return ativoRepository.save(ativo);
+        EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
+                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
+
+        ativoResponseDTO.setEndereco(enderecoGeorreferenciadoResponseDTO);
+
+        Ativo ativo = new Ativo(ativoResponseDTO);
+
+        return new AtivoResponseDTO(ativoRepository.save(ativo));
     }
 
-    public Ativo alterarStatus(Integer id, String status){
-        Ativo ativo = obterPorId(id);
+    public AtivoResponseDTO alterarStatus(Integer id, String status){
+        AtivoResponseDTO ativoResponseDTO = obterPorId(id);
 
         StatusAtivo statusNovo = StatusAtivo.fromString(status);
 
-        if(statusNovo.equals(ativo.getStatusAtivo())){
+        if(statusNovo.equals(ativoResponseDTO.getStatusAtivo())){
             throw new IllegalStateException("O status atual do ativo já é " + status);
         }
 
-        ativo.setStatusAtivo(statusNovo);
-        return ativoRepository.save(ativo);
+        ativoResponseDTO.setStatusAtivo(statusNovo);
+
+        Ativo ativo = new Ativo(ativoResponseDTO);
+
+        return new AtivoResponseDTO(ativoRepository.save(ativo));
     }
 
-    public Ativo obterPorId(Integer id) {
-        return ativoRepository.findById(id).orElseThrow(()->
+    public AtivoResponseDTO obterPorId(Integer id) {
+        Ativo ativo = ativoRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("O ativo com ID " + id + " não foi encontrado."));
+
+        return new AtivoResponseDTO(ativo);
     }
 
-    public List<Ativo> obterLista() {
-        return ativoRepository.findAll();
+    public List<AtivoResponseDTO> obterLista() {
+        return ativoRepository.findAll()
+                .stream()
+                .map(AtivoResponseDTO::new) // chama o construtor DTO(Tecnico)
+                .toList();
     }
 
     public void excluir(Integer id) {
-        Ativo ativo = obterPorId(id);
-        ativoRepository.delete(ativo);
+        AtivoResponseDTO ativoResponseDTO = obterPorId(id);
+        ativoRepository.delete(new Ativo(ativoResponseDTO));
     }
 
 }

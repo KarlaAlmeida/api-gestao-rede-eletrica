@@ -1,5 +1,8 @@
 package br.edu.infnet.karlaapi.controller.exception;
 
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.CepNotFoundException;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ExternalApiException;
+import br.edu.infnet.karlaapi.model.infraestructure.exceptions.InvalidCepException;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
@@ -118,6 +121,32 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(InvalidCepException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCepException(InvalidCepException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("Data/hora", LocalDateTime.now().toString());
+        errors.put("Status", HttpStatus.BAD_REQUEST.toString());
+        errors.put("Mensagem", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CepNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCepNotFoundException(CepNotFoundException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("Data/hora", LocalDateTime.now().toString());
+        errors.put("Status", HttpStatus.NOT_FOUND.toString());
+        errors.put("Mensagem", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ExternalApiException.class)
+    public ResponseEntity<Map<String, String>> handleExternalApiException(ExternalApiException ex) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("Data/hora", LocalDateTime.now().toString());
+        errors.put("Status", HttpStatus.SERVICE_UNAVAILABLE.toString());
+        errors.put("Mensagem", ex.getMessage());
+        return new ResponseEntity<>(errors, HttpStatus.SERVICE_UNAVAILABLE);
+    }
 
 
 

@@ -1,18 +1,20 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
+import br.edu.infnet.karlaapi.model.domain.dto.out.OrdemServicoResponseDTO;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.PastOrPresent;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class OrdemServico {
 
@@ -37,25 +39,20 @@ public class OrdemServico {
     private LocalDate dataCriacaoOS;
 
     @Column(name = "data_conclusao_OS", length = 100)
-    @PastOrPresent
     private LocalDate dataConclusaoOS;
 
     @Enumerated(EnumType.STRING)
     private StatusOS statusOS;
 
-    public OrdemServico(Integer id, Ocorrencia ocorrencia, Tecnico tecnico,
-                        String descricaoServico, LocalDate dataCriacaoOS,
-                        LocalDate dataConclusaoOS, StatusOS statusOS) {
-        this.id = id;
-        this.ocorrencia = ocorrencia;
-        this.tecnico = tecnico;
-        this.descricaoServico = descricaoServico;
-        this.dataCriacaoOS = dataCriacaoOS;
-        this.dataConclusaoOS = dataConclusaoOS;
-        this.statusOS = statusOS;
-    }
 
-    public OrdemServico() {
+    public OrdemServico(OrdemServicoResponseDTO ordemServicoResponseDTO){
+        this.setId(ordemServicoResponseDTO.getId());
+        this.ocorrencia = new Ocorrencia(ordemServicoResponseDTO.getOcorrencia());
+        this.tecnico = new Tecnico(ordemServicoResponseDTO.getTecnico());
+        this.setDescricaoServico(ordemServicoResponseDTO.getDescricaoServico());
+        this.setDataCriacaoOS(ordemServicoResponseDTO.getDataCriacaoOS());
+        this.setDataConclusaoOS(ordemServicoResponseDTO.getDataConclusaoOS());
+        this.setStatusOS(ordemServicoResponseDTO.getStatusOS());
     }
 
     @Override

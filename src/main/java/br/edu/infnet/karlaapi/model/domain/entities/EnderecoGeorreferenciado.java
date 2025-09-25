@@ -1,0 +1,85 @@
+package br.edu.infnet.karlaapi.model.domain.entities;
+
+import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoResponseDTO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class EnderecoGeorreferenciado {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "cep", length = 100)
+    private String cep;
+
+    @Column(name = "logradouro", length = 100)
+    private String logradouro;
+
+    @Column(name = "complemento_rua", length = 100)
+    private String complemento;
+
+    @Column(name = "bairro", length = 100)
+    private String bairro;
+
+    @Column(name = "cidade", length = 100)
+    private String localidade;
+
+    @Column(name = "uf", length = 100)
+    private String uf;
+
+    @Column(name = "latitude", length = 100)
+    private String latitude;
+
+    @Column(name = "longitude", length = 100)
+    private String longitude;
+
+    @Column(name = "numero", length = 10)
+    private int numero;
+
+    @Column(name = "complemento_numero", length = 100)
+    private String complementoNumero;
+
+    public EnderecoGeorreferenciado(EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO) {
+
+        this.setCep(enderecoGeorreferenciadoResponseDTO.getCep());
+        this.setLogradouro(enderecoGeorreferenciadoResponseDTO.getLogradouro());
+        this.setComplemento(enderecoGeorreferenciadoResponseDTO.getComplemento());
+        this.setBairro(enderecoGeorreferenciadoResponseDTO.getBairro());
+        this.setLocalidade(enderecoGeorreferenciadoResponseDTO.getLocalidade());
+        this.setUf(enderecoGeorreferenciadoResponseDTO.getUf());
+        this.setLatitude(enderecoGeorreferenciadoResponseDTO.getLatitude());
+        this.setLongitude(enderecoGeorreferenciadoResponseDTO.getLongitude());
+    }
+
+    public EnderecoGeorreferenciado(EnderecoResponseDTO enderecoResponseDTO) {
+
+        this.setCep(enderecoResponseDTO.getCep());
+        this.setLogradouro(enderecoResponseDTO.getLogradouro());
+        this.setComplemento(enderecoResponseDTO.getComplemento());
+        this.setBairro(enderecoResponseDTO.getBairro());
+        this.setLocalidade(enderecoResponseDTO.getLocalidade());
+        this.setUf(enderecoResponseDTO.getUf());
+        this.setNumero(enderecoResponseDTO.getNumero());
+        this.setComplementoNumero(enderecoResponseDTO.getComplementoNumero());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("id %d, cep %s, logradouro %s, complemento %s, bairro %s, localidade %s, uf %s," +
+                        " latitude %s, longitude %s",
+                id, cep, logradouro, complemento, bairro, localidade, uf, latitude, longitude);
+    }
+
+}

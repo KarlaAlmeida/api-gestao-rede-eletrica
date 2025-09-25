@@ -1,8 +1,6 @@
 package br.edu.infnet.karlaapi.model.loader;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.entities.*;
-import br.edu.infnet.karlaapi.model.infraestructure.enums.*;
 import br.edu.infnet.karlaapi.model.service.OrdemServicoService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.time.LocalDate;
 
 @Component
 @Order(4)
