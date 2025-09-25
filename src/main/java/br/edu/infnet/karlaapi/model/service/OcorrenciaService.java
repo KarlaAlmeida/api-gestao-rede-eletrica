@@ -1,6 +1,8 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
@@ -24,67 +26,79 @@ public class OcorrenciaService {
         this.ativoRepository = ativoRepository;
     }
 
-     public Ocorrencia incluir(OcorrenciaRequestDTO dto) {
+     public OcorrenciaResponseDTO incluir(OcorrenciaRequestDTO dto) {
 
-        Ativo ativo = obterAtivoPorId(dto.getAtivoId());
+        AtivoResponseDTO ativoResponseDTO = obterAtivoPorId(dto.getAtivoId());
 
-        Ocorrencia ocorrencia = new Ocorrencia();
-        ocorrencia.setAtivo(ativo);
-        ocorrencia.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
-        ocorrencia.setDataRegistroOcorrencia(LocalDate.now());
-        ocorrencia.setPrioridadeOcorrencia(PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia()));
-        ocorrencia.setStatusOcorrencia(StatusOcorrencia.REGISTRADA);
+        OcorrenciaResponseDTO ocorrenciaResponseDTO = new OcorrenciaResponseDTO();
+        ocorrenciaResponseDTO.setAtivo(ativoResponseDTO);
+        ocorrenciaResponseDTO.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
+        ocorrenciaResponseDTO.setDataRegistroOcorrencia(LocalDate.now());
+        ocorrenciaResponseDTO.setPrioridadeOcorrencia(PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia()));
+        ocorrenciaResponseDTO.setStatusOcorrencia(StatusOcorrencia.REGISTRADA);
 
-        return ocorrenciaRepository.save(ocorrencia);
+        Ocorrencia ocorrencia = new Ocorrencia(ocorrenciaResponseDTO);
+
+        return new OcorrenciaResponseDTO(ocorrenciaRepository.save(ocorrencia));
     }
 
-    public Ocorrencia alterar(Integer id, OcorrenciaRequestDTO dto) {
+    public OcorrenciaResponseDTO alterar(Integer id, OcorrenciaRequestDTO dto) {
 
-        Ocorrencia ocorrencia = obterPorId(id);
-        ocorrencia.setId(id);
-        Ativo ativo = obterAtivoPorId(dto.getAtivoId());
-        ativo.setId(id);
+        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterPorId(id);
+        ocorrenciaResponseDTO.setId(id);
+        AtivoResponseDTO ativoResponseDTO = obterAtivoPorId(dto.getAtivoId());
+        ativoResponseDTO.setId(id);
 
-        ocorrencia.setAtivo(ativo);
+        ocorrenciaResponseDTO.setAtivo(ativoResponseDTO);
+        ocorrenciaResponseDTO.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
+        PrioridadeOcorrencia prioridadeOcorrencia =
+                PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia());
+        ocorrenciaResponseDTO.setPrioridadeOcorrencia(prioridadeOcorrencia);
 
-        ocorrencia.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
+        Ocorrencia ocorrencia = new Ocorrencia(ocorrenciaResponseDTO);
 
-        PrioridadeOcorrencia prioridadeOcorrencia = PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia());
-        ocorrencia.setPrioridadeOcorrencia(prioridadeOcorrencia);
-
-        return ocorrenciaRepository.save(ocorrencia);
+        return new OcorrenciaResponseDTO(ocorrenciaRepository.save(ocorrencia));
     }
 
-    public Ocorrencia alterarStatus(Integer id, String statusNovo){
-        Ocorrencia ocorrencia = obterPorId(id);
+    public OcorrenciaResponseDTO alterarStatus(Integer id, String statusNovo){
+        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterPorId(id);
 
         StatusOcorrencia statusOcorrenciaNovo = StatusOcorrencia.fromString(statusNovo);
 
-        if(statusOcorrenciaNovo.equals(ocorrencia.getStatusOcorrencia())){
+        if(statusOcorrenciaNovo.equals(ocorrenciaResponseDTO.getStatusOcorrencia())){
             throw new IllegalStateException("O status atual da ocorrência já é " + statusOcorrenciaNovo);
         }
 
-        ocorrencia.setStatusOcorrencia(statusOcorrenciaNovo);
-        return ocorrenciaRepository.save(ocorrencia);
+        ocorrenciaResponseDTO.setStatusOcorrencia(statusOcorrenciaNovo);
+
+        Ocorrencia ocorrencia = new Ocorrencia(ocorrenciaResponseDTO);
+
+        return new OcorrenciaResponseDTO(ocorrenciaRepository.save(ocorrencia));
     }
 
-    public Ocorrencia obterPorId(Integer id) {
-       return ocorrenciaRepository.findById(id).orElseThrow(()->
+    public OcorrenciaResponseDTO obterPorId(Integer id) {
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("A ocorrência com ID " + id + " não foi encontrada."));
+        return new OcorrenciaResponseDTO(ocorrencia);
     }
 
-    public Ativo obterAtivoPorId(Integer id) {
-        return ativoRepository.findById(id).orElseThrow(()->
+    public AtivoResponseDTO obterAtivoPorId(Integer id) {
+        Ativo ativo = ativoRepository.findById(id).orElseThrow(()->
                 new ResourceNotFoundException("Ativo não encontrado pelo ID " + id));
+
+        return new AtivoResponseDTO(ativo);
     }
 
-    public List<Ocorrencia> obterLista() {
-        return ocorrenciaRepository.findAll();
+    public List<OcorrenciaResponseDTO> obterLista() {
+        return ocorrenciaRepository.findAll()
+                .stream()
+                .map(OcorrenciaResponseDTO::new) // chama o construtor DTO(Tecnico)
+                .toList();
     }
 
     public void excluir(Integer id) {
-        Ocorrencia ocorrencia = obterPorId(id);
-        ocorrenciaRepository.delete(ocorrencia);
+        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterPorId(id);
+        ocorrenciaRepository.delete(new Ocorrencia(ocorrenciaResponseDTO));
     }
 
 }

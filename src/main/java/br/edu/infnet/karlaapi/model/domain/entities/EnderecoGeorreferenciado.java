@@ -1,97 +1,85 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
+import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoResponseDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class EnderecoGeorreferenciado {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "cep", length = 100)
     private String cep;
+
+    @Column(name = "logradouro", length = 100)
     private String logradouro;
+
+    @Column(name = "complemento_rua", length = 100)
     private String complemento;
+
+    @Column(name = "bairro", length = 100)
     private String bairro;
+
+    @Column(name = "cidade", length = 100)
     private String localidade;
+
+    @Column(name = "uf", length = 100)
     private String uf;
-    private int numero;
-    private String complementoNumero;
+
+    @Column(name = "latitude", length = 100)
     private String latitude;
+
+    @Column(name = "longitude", length = 100)
     private String longitude;
 
-    public String getCep() {
-        return cep;
+    @Column(name = "numero", length = 10)
+    private int numero;
+
+    @Column(name = "complemento_numero", length = 100)
+    private String complementoNumero;
+
+    public EnderecoGeorreferenciado(EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO) {
+
+        this.setCep(enderecoGeorreferenciadoResponseDTO.getCep());
+        this.setLogradouro(enderecoGeorreferenciadoResponseDTO.getLogradouro());
+        this.setComplemento(enderecoGeorreferenciadoResponseDTO.getComplemento());
+        this.setBairro(enderecoGeorreferenciadoResponseDTO.getBairro());
+        this.setLocalidade(enderecoGeorreferenciadoResponseDTO.getLocalidade());
+        this.setUf(enderecoGeorreferenciadoResponseDTO.getUf());
+        this.setLatitude(enderecoGeorreferenciadoResponseDTO.getLatitude());
+        this.setLongitude(enderecoGeorreferenciadoResponseDTO.getLongitude());
     }
 
-    public void setCep(String cep) {
-        this.cep = cep;
+    public EnderecoGeorreferenciado(EnderecoResponseDTO enderecoResponseDTO) {
+
+        this.setCep(enderecoResponseDTO.getCep());
+        this.setLogradouro(enderecoResponseDTO.getLogradouro());
+        this.setComplemento(enderecoResponseDTO.getComplemento());
+        this.setBairro(enderecoResponseDTO.getBairro());
+        this.setLocalidade(enderecoResponseDTO.getLocalidade());
+        this.setUf(enderecoResponseDTO.getUf());
+        this.setNumero(enderecoResponseDTO.getNumero());
+        this.setComplementoNumero(enderecoResponseDTO.getComplementoNumero());
     }
 
-    public String getLogradouro() {
-        return logradouro;
+    @Override
+    public String toString() {
+        return String.format("id %d, cep %s, logradouro %s, complemento %s, bairro %s, localidade %s, uf %s," +
+                        " latitude %s, longitude %s",
+                id, cep, logradouro, complemento, bairro, localidade, uf, latitude, longitude);
     }
 
-    public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getLocalidade() {
-        return localidade;
-    }
-
-    public void setLocalidade(String localidade) {
-        this.localidade = localidade;
-    }
-
-    public String getUf() {
-        return uf;
-    }
-
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
-
-    public int getNumero() {
-        return numero;
-    }
-
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
-
-    public String getComplementoNumero() {
-        return complementoNumero;
-    }
-
-    public void setComplementoNumero(String complementoNumero) {
-        this.complementoNumero = complementoNumero;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
 }

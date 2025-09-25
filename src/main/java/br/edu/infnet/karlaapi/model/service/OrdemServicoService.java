@@ -2,9 +2,10 @@ package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoAlteraDataConclusaoDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
+import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.OrdemServicoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.OrdemServico;
-import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.OcorrenciaRepository;
@@ -30,96 +31,115 @@ public class OrdemServicoService {
         this.tecnicoRepository = tecnicoRepository;
     }
 
-    public OrdemServico incluir(OrdemServicoRequestDTO dto) {
+    public OrdemServicoResponseDTO incluir(OrdemServicoRequestDTO dto) {
 
-        Ocorrencia ocorrencia = obterOcorrenciaPorId(dto.getOcorrenciaId());
-        Tecnico tecnico = obterTecnicoPorCPF(dto.getCpfTecnico());
+        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterOcorrenciaPorId(dto.getOcorrenciaId());
+        TecnicoResponseDTO tecnicoResponseDTO = obterTecnicoPorCPF(dto.getCpfTecnico());
 
-        OrdemServico ordemServico = new OrdemServico();
-        ordemServico.setOcorrencia(ocorrencia);
-        ordemServico.setTecnico(tecnico);
-        ordemServico.setDataCriacaoOS(LocalDate.now());
-        ordemServico.setDescricaoServico(dto.getDescricaoServico());
-        ordemServico.setStatusOS(StatusOS.ABERTA);
+        OrdemServicoResponseDTO ordemServicoResponseDTO = new OrdemServicoResponseDTO();
+        ordemServicoResponseDTO.setOcorrencia(ocorrenciaResponseDTO);
+        ordemServicoResponseDTO.setTecnico(tecnicoResponseDTO);
+        ordemServicoResponseDTO.setDataCriacaoOS(LocalDate.now());
+        ordemServicoResponseDTO.setDescricaoServico(dto.getDescricaoServico());
+        ordemServicoResponseDTO.setStatusOS(StatusOS.ABERTA);
 
-        return ordemServicoRepository.save(ordemServico);
+        OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
+
+        return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
     }
 
-    public OrdemServico alterar(Integer id, OrdemServicoRequestDTO dto) {
+    public OrdemServicoResponseDTO alterar(Integer id, OrdemServicoRequestDTO dto) {
 
-        OrdemServico ordemServico = obterPorId(id);
-        ordemServico.setId(id);
-        Ocorrencia ocorrencia = obterOcorrenciaPorId(dto.getOcorrenciaId());
-        ocorrencia.setId(id);
-        Tecnico tecnico = obterTecnicoPorCPF(dto.getCpfTecnico());
-        tecnico.setId(id);
+        OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
+        ordemServicoResponseDTO.setId(id);
+        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterOcorrenciaPorId(dto.getOcorrenciaId());
+        ocorrenciaResponseDTO.setId(id);
+        TecnicoResponseDTO tecnicoResponseDTO = obterTecnicoPorCPF(dto.getCpfTecnico());
+        tecnicoResponseDTO.setId(id);
 
-        ordemServico.setOcorrencia(ocorrencia);
-        ordemServico.setTecnico(tecnico);
-        ordemServico.setDescricaoServico(dto.getDescricaoServico());
+        ordemServicoResponseDTO.setOcorrencia(ocorrenciaResponseDTO);
+        ordemServicoResponseDTO.setTecnico(tecnicoResponseDTO);
+        ordemServicoResponseDTO.setDescricaoServico(dto.getDescricaoServico());
 
-        return ordemServicoRepository.save(ordemServico);
+        OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
+
+        return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
     }
 
-    public OrdemServico alterarStatus(Integer id, String statusNovo){
-        OrdemServico ordemServico = obterPorId(id);
+    public OrdemServicoResponseDTO alterarStatus(Integer id, String statusNovo){
+        OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
 
         StatusOS statusOSNovo = StatusOS.fromString(statusNovo);
 
-        if(statusOSNovo.equals(ordemServico.getStatusOS())){
+        if(statusOSNovo.equals(ordemServicoResponseDTO.getStatusOS())){
             throw new IllegalStateException("O status atual da ordem de serviço já é " + statusOSNovo);
         }
 
-        ordemServico.setStatusOS(statusOSNovo);
-        return ordemServicoRepository.save(ordemServico);
+        ordemServicoResponseDTO.setStatusOS(statusOSNovo);
+
+        OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
+
+        return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
     }
 
-    public OrdemServico alterarDataConclusao(Integer id, OrdemServicoAlteraDataConclusaoDTO dataConclusaoDTO){
-        OrdemServico ordemServico = obterPorId(id);
+    public OrdemServicoResponseDTO alterarDataConclusao(Integer id, OrdemServicoAlteraDataConclusaoDTO dataConclusaoDTO){
+        OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
 
-        if(dataConclusaoDTO.equals(ordemServico.getDataConclusaoOS())){
+        if(dataConclusaoDTO.equals(ordemServicoResponseDTO.getDataConclusaoOS())){
             throw new IllegalStateException(
                     "A data de conclusão atual da ordem de serviço já é " + dataConclusaoDTO);
         }
 
-        ordemServico.setDataConclusaoOS(dataConclusaoDTO.getDataConclusaoOS());
-        return ordemServicoRepository.save(ordemServico);
+        ordemServicoResponseDTO.setDataConclusaoOS(dataConclusaoDTO.getDataConclusaoOS());
+
+        OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
+
+        return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
     }
 
-    public OrdemServico obterPorId(Integer id) {
-        return ordemServicoRepository.findById(id).orElseThrow(()->
-                new ResourceNotFoundException("A ordem de serviço com ID " + id + " não foi encontrada."));
+    public OrdemServicoResponseDTO obterPorId(Integer id) {
+        return new OrdemServicoResponseDTO(ordemServicoRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("A ordem de serviço com ID " + id + " não foi encontrada.")));
     }
 
-    public Ocorrencia obterOcorrenciaPorId(Integer id){
-        return ocorrenciaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ocorrência não encontrada pelo ID " + id));
+    public OcorrenciaResponseDTO obterOcorrenciaPorId(Integer id){
+        return new OcorrenciaResponseDTO(ocorrenciaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ocorrência não encontrada pelo ID " + id)));
     }
 
-    public Tecnico obterTecnicoPorCPF(String cpfTecnico){
-        return tecnicoRepository.findByCpf(cpfTecnico)
+    public TecnicoResponseDTO obterTecnicoPorCPF(String cpfTecnico){
+        return new TecnicoResponseDTO(tecnicoRepository.findByCpf(cpfTecnico)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Técnico não encontrado pelo CPF " + cpfTecnico));
+                        "Técnico não encontrado pelo CPF " + cpfTecnico)));
     }
 
-    public List<OrdemServico> obterLista() {
-        return ordemServicoRepository.findAll();
+    public List<OrdemServicoResponseDTO> obterLista() {
+        return ordemServicoRepository.findAll()
+                .stream()
+                .map(OrdemServicoResponseDTO::new) // chama o construtor DTO(Tecnico)
+                .toList();
     }
 
-    public List<OrdemServico> listarPorTecnico(String cpf) {
-        return ordemServicoRepository.findByTecnicoCpf(cpf);
+    public List<OrdemServicoResponseDTO> listarPorTecnico(String cpf) {
+        return ordemServicoRepository.findByTecnicoCpf(cpf)
+                .stream()
+                .map(OrdemServicoResponseDTO::new) // chama o construtor DTO(Tecnico)
+                .toList();
     }
 
-    public List<OrdemServico> filtrarPorDescricaoServicoEPeriodo(
+    public List<OrdemServicoResponseDTO> filtrarPorDescricaoServicoEPeriodo(
             String descricaoBusca, LocalDate dataInicio, LocalDate dataFim) {
         return ordemServicoRepository
                 .findByDescricaoServicoContainingIgnoreCaseAndDataCriacaoOSBetween(
-                        descricaoBusca, dataInicio, dataFim);
+                        descricaoBusca, dataInicio, dataFim)
+                .stream()
+                .map(OrdemServicoResponseDTO::new) // chama o construtor DTO(Tecnico)
+                .toList();
     }
 
     public void excluir(Integer id) {
-        OrdemServico ordemServico = obterPorId(id);
-        ordemServicoRepository.delete(ordemServico);
+        OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
+        ordemServicoRepository.delete(new OrdemServico(ordemServicoResponseDTO));
     }
 
 }

@@ -1,6 +1,7 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.clients.GeolocalizacaoFeignClient;
+import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.CepNotFoundException;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ExternalApiException;
@@ -17,14 +18,21 @@ public class EnderecoGeorreferenciadoService {
         this.geolocalizacaoFeignClient = geolocalizacaoFeignClient;
     }
 
-    public EnderecoGeorreferenciado obterEnderecoGeorreferenciadoPorCep(String cep){
+    public EnderecoGeorreferenciadoResponseDTO obterEnderecoGeorreferenciadoPorCep(String cep){
 
         if (cep == null || !cep.matches("\\d{8}")) {
             throw new InvalidCepException("O CEP deve conter 8 dígitos.");
         }
 
         try {
-            return geolocalizacaoFeignClient.obterEnderecoGeorreferenciadoPorCep(cep);
+            EnderecoGeorreferenciado enderecoGeorreferenciado =
+                    geolocalizacaoFeignClient.obterEnderecoGeorreferenciadoPorCep(cep);
+
+            EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
+                    new EnderecoGeorreferenciadoResponseDTO(enderecoGeorreferenciado);
+
+            return enderecoGeorreferenciadoResponseDTO;
+
         } catch (FeignException.NotFound e) {
             throw new CepNotFoundException("CEP não encontrado: " + cep);
         } catch (FeignException e) {

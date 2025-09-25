@@ -1,6 +1,7 @@
 package br.edu.infnet.karlaapi.controller;
 
-import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
+import br.edu.infnet.karlaapi.model.domain.dto.in.TecnicoRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,13 @@ public class TecnicoController {
     }
 
     @PostMapping
-    public ResponseEntity<Tecnico> incluir(@Valid @RequestBody Tecnico tecnico) {
+    public ResponseEntity<TecnicoResponseDTO> incluir(@Valid @RequestBody TecnicoRequestDTO tecnico) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tecnicoService.incluir(tecnico));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Tecnico> alterar(@PathVariable Integer id,
-                                           @Valid @RequestBody Tecnico tecnico) {
+    public ResponseEntity<TecnicoResponseDTO> alterar(@PathVariable Integer id,
+                                           @Valid @RequestBody TecnicoRequestDTO tecnico) {
 
         if (tecnico == null) {
             return ResponseEntity.noContent().build();
@@ -35,18 +36,18 @@ public class TecnicoController {
     }
 
     @PatchMapping(value = "/{id}/inativar")
-    public ResponseEntity<Tecnico> inativar(@PathVariable Integer id) {
+    public ResponseEntity<TecnicoResponseDTO> inativar(@PathVariable Integer id) {
         return ResponseEntity.ok(tecnicoService.inativar(id));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Tecnico> obterPorId(@PathVariable Integer id){
+    public ResponseEntity<TecnicoResponseDTO> obterPorId(@PathVariable Integer id){
         return ResponseEntity.ok(tecnicoService.obterPorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Tecnico>> obterLista(){
-        List<Tecnico> lista = tecnicoService.obterLista();
+    public ResponseEntity<List<TecnicoResponseDTO>> obterLista(){
+        List<TecnicoResponseDTO> lista = tecnicoService.obterLista();
 
         if(lista.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -56,7 +57,7 @@ public class TecnicoController {
     }
 
     @GetMapping("filtro/nome-e-especialidade")
-    public List<Tecnico> buscarPorNomeEspecialidade(@RequestParam String nomePrefixo,
+    public List<TecnicoResponseDTO> buscarPorNomeEspecialidade(@RequestParam String nomePrefixo,
                                                     @RequestParam String especialidade) {
         return tecnicoService.buscarPorNomeEspecialidade(nomePrefixo, especialidade);
     }

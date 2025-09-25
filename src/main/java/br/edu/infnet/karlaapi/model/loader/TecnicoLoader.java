@@ -1,12 +1,11 @@
 package br.edu.infnet.karlaapi.model.loader;
 
+import br.edu.infnet.karlaapi.model.domain.dto.in.TecnicoRequestDTO;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import br.edu.infnet.karlaapi.model.domain.entities.Endereco;
-import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
 
 import java.io.BufferedReader;
@@ -36,7 +35,7 @@ public class TecnicoLoader implements ApplicationRunner{
 
             campos = linha.split(";");
 
-            Tecnico tecnico = new Tecnico();
+            TecnicoRequestDTO tecnico = new TecnicoRequestDTO();
             tecnico.setNome(campos[0]);
             tecnico.setCpf(campos[1]);
             tecnico.setEmail(campos[2]);
@@ -45,16 +44,7 @@ public class TecnicoLoader implements ApplicationRunner{
             tecnico.setAtivo(Boolean.valueOf(campos[5]));
             tecnico.setEspecialidade(campos[6]);
             tecnico.setDisponivel(Boolean.valueOf(campos[7]));
-
-            Endereco endereco = new Endereco();
-            endereco.setCep(campos[8]);
-            endereco.setRua(campos[9]);
-            endereco.setNumero(Integer.valueOf(campos[10]));
-            endereco.setComplemento(campos[11]);
-            endereco.setCidade(campos[12]);
-            endereco.setEstado(campos[13]);
-
-            tecnico.setEndereco(endereco);
+            tecnico.setCep(campos[8]);
 
             tecnicoService.incluir(tecnico);
 
