@@ -1,0 +1,13 @@
+
+> frontend@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3001
+
+ ✓ Starting...
+ ✓ Ready in 2s
+ ○ Compiling /ativos ...
+ ✓ Compiled /ativos in 4.8s (706 modules)
+ GET /ativos 200 in 5554ms
