@@ -2,12 +2,18 @@
 > frontend@0.1.0 dev
 > next dev
 
- ⚠ Port 3000 is in use, trying 3001 instead.
   ▲ Next.js 14.2.35
-  - Local:        http://localhost:3001
+  - Local:        http://localhost:3000
 
  ✓ Starting...
- ✓ Ready in 2s
- ○ Compiling /ativos ...
- ✓ Compiled /ativos in 4.8s (706 modules)
- GET /ativos 200 in 5554ms
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ✓ Ready in 2.6s
+ ○ Compiling /login ...
+ ✓ Compiled /login in 6.9s (604 modules)
+ GET /login 200 in 7404ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 3.3s (539 modules)
