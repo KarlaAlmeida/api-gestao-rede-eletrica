@@ -1,9 +1,11 @@
 package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.service.OcorrenciaService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +50,7 @@ public class OcorrenciaController {
         return ResponseEntity.ok(ocorrenciaService.obterPorId(id));
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<OcorrenciaResponseDTO>> obterLista(){
 
         List<OcorrenciaResponseDTO> lista = ocorrenciaService.obterLista();
@@ -58,6 +60,21 @@ public class OcorrenciaController {
         }
 
         return ResponseEntity.ok(lista);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<Page<OcorrenciaResponseDTO>> obterLista(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+
+        Page<OcorrenciaResponseDTO> pagina = ocorrenciaService.obterLista(page, size);
+
+        if (pagina.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(pagina);
     }
 
     @DeleteMapping(value = "/{id}")

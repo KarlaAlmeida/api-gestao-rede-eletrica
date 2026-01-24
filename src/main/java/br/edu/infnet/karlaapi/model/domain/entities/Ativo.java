@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class Ativo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Integer id;
 
     @Enumerated(EnumType.STRING)

@@ -9,9 +9,13 @@ import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.AtivoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AtivoService{
@@ -48,16 +52,21 @@ public class AtivoService{
     public AtivoResponseDTO alterar(Integer id, AtivoRequestDTO ativoRequestDTO) {
 
         AtivoResponseDTO ativoResponseDTO = obterPorId(id);
-        ativoResponseDTO.setId(id);
-        ativoResponseDTO.setTipoAtivo(TipoAtivo.fromString(ativoRequestDTO.getTipoAtivo()));
-        ativoResponseDTO.setDataInstalacao(ativoRequestDTO.getDataInstalacao());
 
-        String cepLimpo = ativoRequestDTO.getCep().replace("-", "");
+        if(ativoRequestDTO.getTipoAtivo() != null)
+            ativoResponseDTO.setTipoAtivo(TipoAtivo.fromString(ativoRequestDTO.getTipoAtivo()));
 
-        EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
-                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
+        if(ativoRequestDTO.getDataInstalacao() != null)
+            ativoResponseDTO.setDataInstalacao(ativoRequestDTO.getDataInstalacao());
 
-        ativoResponseDTO.setEndereco(enderecoGeorreferenciadoResponseDTO);
+        if(ativoRequestDTO.getCep() != null) {
+            String cepLimpo = ativoRequestDTO.getCep().replace("-", "");
+
+            EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
+                    enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
+
+            ativoResponseDTO.setEndereco(enderecoGeorreferenciadoResponseDTO);
+        }
 
         Ativo ativo = new Ativo(ativoResponseDTO);
 
@@ -87,11 +96,18 @@ public class AtivoService{
         return new AtivoResponseDTO(ativo);
     }
 
-    public List<AtivoResponseDTO> obterLista() {
+    /*public List<AtivoResponseDTO> obterLista() {
         return ativoRepository.findAll()
                 .stream()
                 .map(AtivoResponseDTO::new) // chama o construtor DTO(Tecnico)
                 .toList();
+    }*/
+
+    public Page<AtivoResponseDTO> obterLista(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return ativoRepository.findAll(pageable)
+                .map(AtivoResponseDTO::new);
     }
 
     public void excluir(Integer id) {

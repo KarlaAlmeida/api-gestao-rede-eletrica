@@ -4,14 +4,14 @@ import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
 import br.edu.infnet.karlaapi.model.service.AtivoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/ativos")
+@CrossOrigin(origins = "*")
 public class AtivoController {
 
     private final AtivoService ativoService;
@@ -47,7 +47,7 @@ public class AtivoController {
         return ResponseEntity.ok(ativoService.obterPorId(id));
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<AtivoResponseDTO>> obterLista(){
 
         List<AtivoResponseDTO> lista = ativoService.obterLista();
@@ -57,6 +57,21 @@ public class AtivoController {
         }
 
         return ResponseEntity.ok(lista);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<Page<AtivoResponseDTO>> obterLista(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+
+        Page<AtivoResponseDTO> pagina = ativoService.obterLista(page, size);
+
+        if (pagina.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(pagina);
     }
 
     @DeleteMapping(value = "/{id}")

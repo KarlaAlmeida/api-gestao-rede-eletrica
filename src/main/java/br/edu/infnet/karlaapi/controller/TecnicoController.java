@@ -1,9 +1,11 @@
 package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.TecnicoRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.OrdemServicoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +47,7 @@ public class TecnicoController {
         return ResponseEntity.ok(tecnicoService.obterPorId(id));
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<TecnicoResponseDTO>> obterLista(){
         List<TecnicoResponseDTO> lista = tecnicoService.obterLista();
 
@@ -54,6 +56,21 @@ public class TecnicoController {
         }
 
         return ResponseEntity.ok(lista);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<Page<TecnicoResponseDTO>> obterLista(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+
+        Page<TecnicoResponseDTO> pagina = tecnicoService.obterLista(page, size);
+
+        if (pagina.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(pagina);
     }
 
     @GetMapping("filtro/nome-e-especialidade")

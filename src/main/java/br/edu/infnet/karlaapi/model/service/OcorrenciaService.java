@@ -10,10 +10,14 @@ import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.AtivoRepository;
 import br.edu.infnet.karlaapi.model.repository.OcorrenciaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OcorrenciaService {
@@ -45,15 +49,19 @@ public class OcorrenciaService {
     public OcorrenciaResponseDTO alterar(Integer id, OcorrenciaRequestDTO dto) {
 
         OcorrenciaResponseDTO ocorrenciaResponseDTO = obterPorId(id);
-        ocorrenciaResponseDTO.setId(id);
-        AtivoResponseDTO ativoResponseDTO = obterAtivoPorId(dto.getAtivoId());
-        ativoResponseDTO.setId(id);
 
-        ocorrenciaResponseDTO.setAtivo(ativoResponseDTO);
-        ocorrenciaResponseDTO.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
+        if(dto.getAtivoId() != null) {
+            AtivoResponseDTO ativoResponseDTO = obterAtivoPorId(dto.getAtivoId());
+            ocorrenciaResponseDTO.setAtivo(ativoResponseDTO);
+        }
+
+        if(dto.getDescricaoOcorrencia() != null) ocorrenciaResponseDTO.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
+
+        if(dto.getPrioridadeOcorrencia() != null){
         PrioridadeOcorrencia prioridadeOcorrencia =
                 PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia());
         ocorrenciaResponseDTO.setPrioridadeOcorrencia(prioridadeOcorrencia);
+        }
 
         Ocorrencia ocorrencia = new Ocorrencia(ocorrenciaResponseDTO);
 
@@ -94,6 +102,13 @@ public class OcorrenciaService {
                 .stream()
                 .map(OcorrenciaResponseDTO::new) // chama o construtor DTO(Tecnico)
                 .toList();
+    }
+
+    public Page<OcorrenciaResponseDTO> obterLista(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return ocorrenciaRepository.findAll(pageable)
+                .map(OcorrenciaResponseDTO::new);
     }
 
     public void excluir(Integer id) {
