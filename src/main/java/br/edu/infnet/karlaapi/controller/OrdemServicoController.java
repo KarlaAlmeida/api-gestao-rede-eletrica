@@ -2,9 +2,11 @@ package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoAlteraDataConclusaoDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoRequestDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.OrdemServicoResponseDTO;
 import br.edu.infnet.karlaapi.model.service.OrdemServicoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +57,7 @@ public class OrdemServicoController {
         return ResponseEntity.ok(ordemServicoService.obterPorId(id));
     }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<OrdemServicoResponseDTO>> obterLista(){
 
         List<OrdemServicoResponseDTO> lista = ordemServicoService.obterLista();
@@ -65,6 +67,21 @@ public class OrdemServicoController {
         }
 
         return ResponseEntity.ok(lista);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<Page<OrdemServicoResponseDTO>> obterLista(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+
+        Page<OrdemServicoResponseDTO> pagina = ordemServicoService.obterLista(page, size);
+
+        if (pagina.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(pagina);
     }
 
     @GetMapping("/tecnico/{cpf}")

@@ -24,8 +24,10 @@ public class AtivoRequestDTO {
     @PastOrPresent(message = "Data de instalação deve estar no passado ou hoje.")
     private LocalDate dataInstalacao;
 
-    @NotBlank(message = "O CEP é obrigatório")
-    @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "CEP inválido. Use o formato XXXXX-XXX")
+    @Pattern(
+            regexp = "^\\d{5}-?\\d{3}$",
+            message = "CEP inválido. Use XXXXX-XXX ou XXXXXXXX"
+    )
     private String cep;
 
 }

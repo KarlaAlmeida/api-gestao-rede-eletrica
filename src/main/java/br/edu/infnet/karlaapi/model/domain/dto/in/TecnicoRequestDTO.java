@@ -44,7 +44,7 @@ public class TecnicoRequestDTO {
     @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "CEP inválido. Use o formato XXXXX-XXX")
     private String cep;
 
-    //@NotBlank(message = "Número é obrigatória")
+    //@NotBlank(message = "Número é obrigatório")
     //@Size(max = 10, message = "Número deve ter no máximo 10 caracteres")
     private int numero;
 

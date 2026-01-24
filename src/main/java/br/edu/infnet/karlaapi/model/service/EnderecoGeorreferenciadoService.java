@@ -28,12 +28,17 @@ public class EnderecoGeorreferenciadoService {
 
     public EnderecoGeorreferenciadoResponseDTO obterEnderecoGeorreferenciadoPorCep(String cep){
 
-        if (cep == null || !cep.matches("\\d{8}")) {
+        /*if (cep == null || !cep.matches("\\d{8}")) {
+            throw new InvalidCepException("O CEP deve conter 8 dígitos.");
+        }*/
+        String cepLimpo = cep.replaceAll("\\D", "");
+
+        if (!cepLimpo.matches("\\d{8}")) {
             throw new InvalidCepException("O CEP deve conter 8 dígitos.");
         }
 
         try {
-            EnderecoGeorreferenciado endereco = viaCepFeignClient.findByCep(cep);
+            EnderecoGeorreferenciado endereco = viaCepFeignClient.findByCep(cepLimpo);
 
             if (endereco != null) {
                 String query = endereco.getLogradouro() + ", " + endereco.getLocalidade() + ", " + endereco.getUf();

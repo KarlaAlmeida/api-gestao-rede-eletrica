@@ -11,6 +11,9 @@ import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundE
 import br.edu.infnet.karlaapi.model.repository.OcorrenciaRepository;
 import br.edu.infnet.karlaapi.model.repository.OrdemServicoRepository;
 import br.edu.infnet.karlaapi.model.repository.TecnicoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -51,15 +54,18 @@ public class OrdemServicoService {
     public OrdemServicoResponseDTO alterar(Integer id, OrdemServicoRequestDTO dto) {
 
         OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
-        ordemServicoResponseDTO.setId(id);
-        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterOcorrenciaPorId(dto.getOcorrenciaId());
-        ocorrenciaResponseDTO.setId(id);
-        TecnicoResponseDTO tecnicoResponseDTO = obterTecnicoPorCPF(dto.getCpfTecnico());
-        tecnicoResponseDTO.setId(id);
 
-        ordemServicoResponseDTO.setOcorrencia(ocorrenciaResponseDTO);
-        ordemServicoResponseDTO.setTecnico(tecnicoResponseDTO);
-        ordemServicoResponseDTO.setDescricaoServico(dto.getDescricaoServico());
+        if(dto.getOcorrenciaId() != null) {
+            OcorrenciaResponseDTO ocorrenciaResponseDTO = obterOcorrenciaPorId(dto.getOcorrenciaId());
+            ordemServicoResponseDTO.setOcorrencia(ocorrenciaResponseDTO);
+        }
+
+        if(dto.getCpfTecnico() != null) {
+            TecnicoResponseDTO tecnicoResponseDTO = obterTecnicoPorCPF(dto.getCpfTecnico());
+            ordemServicoResponseDTO.setTecnico(tecnicoResponseDTO);
+        }
+
+        if(dto.getDescricaoServico() != null) ordemServicoResponseDTO.setDescricaoServico(dto.getDescricaoServico());
 
         OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
 
@@ -113,11 +119,18 @@ public class OrdemServicoService {
                         "Técnico não encontrado pelo CPF " + cpfTecnico)));
     }
 
-    public List<OrdemServicoResponseDTO> obterLista() {
+    /*public List<OrdemServicoResponseDTO> obterLista() {
         return ordemServicoRepository.findAll()
                 .stream()
                 .map(OrdemServicoResponseDTO::new) // chama o construtor DTO(Tecnico)
                 .toList();
+    }*/
+
+    public Page<OrdemServicoResponseDTO> obterLista(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return ordemServicoRepository.findAll(pageable)
+                .map(OrdemServicoResponseDTO::new);
     }
 
     public List<OrdemServicoResponseDTO> listarPorTecnico(String cpf) {
