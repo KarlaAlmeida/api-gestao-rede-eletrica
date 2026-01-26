@@ -1,7 +1,7 @@
 package br.edu.infnet.karlaapi.controller;
 
+import br.edu.infnet.karlaapi.model.domain.dto.AlterarDisponibilidadeDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.in.TecnicoRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.OrdemServicoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
 import br.edu.infnet.karlaapi.model.service.TecnicoService;
 import jakarta.validation.Valid;
@@ -11,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/tecnicos")
+
 public class TecnicoController {
 
     private final TecnicoService tecnicoService;
@@ -41,6 +43,42 @@ public class TecnicoController {
     public ResponseEntity<TecnicoResponseDTO> inativar(@PathVariable Integer id) {
         return ResponseEntity.ok(tecnicoService.inativar(id));
     }
+
+    @PatchMapping(
+            value = "/{id}/status",
+            consumes = "application/json",
+            produces = "application/json"
+    )
+    public ResponseEntity<TecnicoResponseDTO> alterarStatus(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Boolean> payload
+    ) {
+        Boolean ativo = payload.get("ativo");
+
+        if (ativo == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        TecnicoResponseDTO dto = tecnicoService.alterarStatus(id, ativo);
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @PatchMapping(
+            value = "/{id}/disponibilidade",
+            consumes = "application/json",
+            produces = "application/json"
+    )
+    public ResponseEntity<TecnicoResponseDTO> alterarDisponibilidade(
+            @PathVariable Integer id,
+            @RequestBody @Valid AlterarDisponibilidadeDTO dto
+    ) {
+        TecnicoResponseDTO response =
+                tecnicoService.alterarDisponibilidade(id, dto.getDisponivel());
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<TecnicoResponseDTO> obterPorId(@PathVariable Integer id){

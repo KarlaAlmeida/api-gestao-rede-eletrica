@@ -1,7 +1,6 @@
 package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.service.OcorrenciaService;
 import jakarta.validation.Valid;
@@ -10,10 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/ocorrencias")
+@CrossOrigin(origins = "*")
 public class OcorrenciaController {
 
     private final OcorrenciaService ocorrenciaService;

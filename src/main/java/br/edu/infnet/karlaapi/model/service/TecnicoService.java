@@ -2,13 +2,12 @@ package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.TecnicoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.TecnicoRepository;
-import org.antlr.v4.runtime.atn.SemanticContext;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -104,6 +103,30 @@ public class TecnicoService{
 
         return new TecnicoResponseDTO(tecnicoRepository.save(tecnico));
     }
+
+    public TecnicoResponseDTO alterarStatus(Integer id, boolean ativo) {
+        Tecnico tecnico = tecnicoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Técnico não encontrado"));
+
+        tecnico.setAtivo(ativo);
+
+        tecnicoRepository.save(tecnico);
+
+        return new TecnicoResponseDTO(tecnico);
+    }
+
+    public TecnicoResponseDTO alterarDisponibilidade(Integer id, boolean disponivel) {
+        Tecnico tecnico = tecnicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Técnico não encontrado"));
+
+        tecnico.setDisponivel(disponivel);
+
+        tecnicoRepository.save(tecnico);
+
+        return new TecnicoResponseDTO(tecnico);
+    }
+
 
 
     public TecnicoResponseDTO obterPorId(Integer id) {
