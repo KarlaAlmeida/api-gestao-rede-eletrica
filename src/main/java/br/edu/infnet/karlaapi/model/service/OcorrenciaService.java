@@ -30,57 +30,89 @@ public class OcorrenciaService {
         this.ativoRepository = ativoRepository;
     }
 
-     public OcorrenciaResponseDTO incluir(OcorrenciaRequestDTO dto) {
+    public OcorrenciaResponseDTO incluir(OcorrenciaRequestDTO dto) {
 
-        AtivoResponseDTO ativoResponseDTO = obterAtivoPorId(dto.getAtivoId());
+        Ativo ativo = ativoRepository.findById(dto.getAtivoId())
+                .orElseThrow(() -> new ResourceNotFoundException("Ativo não encontrado"));
 
-        OcorrenciaResponseDTO ocorrenciaResponseDTO = new OcorrenciaResponseDTO();
-        ocorrenciaResponseDTO.setAtivo(ativoResponseDTO);
-        ocorrenciaResponseDTO.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
-        ocorrenciaResponseDTO.setDataRegistroOcorrencia(LocalDate.now());
-        ocorrenciaResponseDTO.setPrioridadeOcorrencia(PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia()));
-        ocorrenciaResponseDTO.setStatusOcorrencia(StatusOcorrencia.REGISTRADA);
+        Ocorrencia ocorrencia = new Ocorrencia();
+        ocorrencia.setAtivo(ativo);
+        ocorrencia.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
+        ocorrencia.setPrioridadeOcorrencia(
+                PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia())
+        );
+        ocorrencia.setDataRegistroOcorrencia(LocalDate.now());
+        ocorrencia.setStatusOcorrencia(StatusOcorrencia.REGISTRADA);
 
-        Ocorrencia ocorrencia = new Ocorrencia(ocorrenciaResponseDTO);
+        ocorrencia = ocorrenciaRepository.save(ocorrencia);
 
-        return new OcorrenciaResponseDTO(ocorrenciaRepository.save(ocorrencia));
+        return new OcorrenciaResponseDTO(ocorrencia);
     }
+
 
     public OcorrenciaResponseDTO alterar(Integer id, OcorrenciaRequestDTO dto) {
 
-        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterPorId(id);
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("A ocorrência com ID " + id + " não foi encontrada.")
+                );
 
-        if(dto.getAtivoId() != null) {
-            AtivoResponseDTO ativoResponseDTO = obterAtivoPorId(dto.getAtivoId());
-            ocorrenciaResponseDTO.setAtivo(ativoResponseDTO);
+        if (dto.getAtivoId() != null) {
+            Ativo ativo = ativoRepository.findById(dto.getAtivoId())
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Ativo não encontrado pelo ID " + dto.getAtivoId())
+                    );
+            ocorrencia.setAtivo(ativo);
         }
 
-        if(dto.getDescricaoOcorrencia() != null) ocorrenciaResponseDTO.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
-
-        if(dto.getPrioridadeOcorrencia() != null){
-        PrioridadeOcorrencia prioridadeOcorrencia =
-                PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia());
-        ocorrenciaResponseDTO.setPrioridadeOcorrencia(prioridadeOcorrencia);
+        if (dto.getDescricaoOcorrencia() != null) {
+            ocorrencia.setDescricaoOcorrencia(dto.getDescricaoOcorrencia());
         }
 
-        Ocorrencia ocorrencia = new Ocorrencia(ocorrenciaResponseDTO);
+        if (dto.getPrioridadeOcorrencia() != null) {
+            ocorrencia.setPrioridadeOcorrencia(
+                    PrioridadeOcorrencia.fromString(dto.getPrioridadeOcorrencia())
+            );
+        }
 
-        return new OcorrenciaResponseDTO(ocorrenciaRepository.save(ocorrencia));
+        Ocorrencia ocorrenciaAtualizada = ocorrenciaRepository.save(ocorrencia);
+
+        return new OcorrenciaResponseDTO(ocorrenciaAtualizada);
     }
 
-    public OcorrenciaResponseDTO alterarStatus(Integer id, String statusNovo){
-        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterPorId(id);
 
-        StatusOcorrencia statusOcorrenciaNovo = StatusOcorrencia.fromString(statusNovo);
+    public OcorrenciaResponseDTO alterarStatus(Integer id, StatusOcorrencia statusNovo) {
 
-        if(statusOcorrenciaNovo.equals(ocorrenciaResponseDTO.getStatusOcorrencia())){
-            throw new IllegalStateException("O status atual da ocorrência já é " + statusOcorrenciaNovo);
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("A ocorrência com ID " + id + " não foi encontrada.")
+                );
+
+        if (statusNovo.equals(ocorrencia.getStatusOcorrencia())) {
+            throw new IllegalStateException(
+                    "O status atual da ocorrência já é " + statusNovo
+            );
         }
 
-        ocorrenciaResponseDTO.setStatusOcorrencia(statusOcorrenciaNovo);
+        ocorrencia.setStatusOcorrencia(statusNovo);
 
-        Ocorrencia ocorrencia = new Ocorrencia(ocorrenciaResponseDTO);
+        Ocorrencia ocorrenciaAtualizada = ocorrenciaRepository.save(ocorrencia);
 
+        return new OcorrenciaResponseDTO(ocorrenciaAtualizada);
+    }
+
+
+
+    public OcorrenciaResponseDTO alterarPrioridade(Integer id, PrioridadeOcorrencia prioridade) {
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Ocorrência não encontrada"));
+
+        if (prioridade.equals(ocorrencia.getPrioridadeOcorrencia())) {
+            throw new IllegalStateException("A prioridade já é " + prioridade);
+        }
+
+        ocorrencia.setPrioridadeOcorrencia(prioridade);
         return new OcorrenciaResponseDTO(ocorrenciaRepository.save(ocorrencia));
     }
 
@@ -112,8 +144,13 @@ public class OcorrenciaService {
     }
 
     public void excluir(Integer id) {
-        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterPorId(id);
-        ocorrenciaRepository.delete(new Ocorrencia(ocorrenciaResponseDTO));
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("A ocorrência com ID " + id + " não foi encontrada.")
+                );
+
+        ocorrenciaRepository.delete(ocorrencia);
     }
+
 
 }
