@@ -1,7 +1,8 @@
 package br.edu.infnet.karlaapi.controller;
 
+import br.edu.infnet.karlaapi.model.domain.dto.AlterarPrioridadeOcorrenciaDTO;
+import br.edu.infnet.karlaapi.model.domain.dto.AlterarStatusOcorrenciaDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.in.OcorrenciaRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.service.OcorrenciaService;
 import jakarta.validation.Valid;
@@ -9,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/ocorrencias")
@@ -38,10 +37,30 @@ public class OcorrenciaController {
 
     }
 
-    @PatchMapping(value = "/{id}/status")
+    /*@PatchMapping(value = "/{id}/status")
     public ResponseEntity<OcorrenciaResponseDTO> alterarStatus(@PathVariable Integer id,
                                                     @RequestParam String statusOcorrencia){
         return ResponseEntity.ok(ocorrenciaService.alterarStatus(id, statusOcorrencia));
+    }*/
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<OcorrenciaResponseDTO> alterarStatus(
+            @PathVariable Integer id,
+            @RequestBody @Valid AlterarStatusOcorrenciaDTO dto
+    ) {
+        return ResponseEntity.ok(
+                ocorrenciaService.alterarStatus(id, dto.getStatusOcorrencia())
+        );
+    }
+
+    @PatchMapping("/{id}/prioridade")
+    public ResponseEntity<OcorrenciaResponseDTO> alterarPrioridade(
+            @PathVariable Integer id,
+            @RequestBody @Valid AlterarPrioridadeOcorrenciaDTO dto
+    ) {
+        return ResponseEntity.ok(
+                ocorrenciaService.alterarPrioridade(id, dto.getPrioridadeOcorrencia())
+        );
     }
 
     @GetMapping(value = "/{id}")

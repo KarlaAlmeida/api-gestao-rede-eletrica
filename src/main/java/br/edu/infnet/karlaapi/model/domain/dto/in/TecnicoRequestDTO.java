@@ -1,5 +1,5 @@
-package br.edu.infnet.karlaapi.model.domain.dto.in;
 
+package br.edu.infnet.karlaapi.model.domain.dto.in;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,8 +40,10 @@ public class TecnicoRequestDTO {
 
     private boolean disponivel;
 
-    @NotBlank(message = "O CEP é obrigatório")
-    @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "CEP inválido. Use o formato XXXXX-XXX")
+    @Pattern(
+            regexp = "^\\d{5}-?\\d{3}$",
+            message = "CEP inválido. Use XXXXX-XXX ou XXXXXXXX"
+    )
     private String cep;
 
     //@NotBlank(message = "Número é obrigatório")

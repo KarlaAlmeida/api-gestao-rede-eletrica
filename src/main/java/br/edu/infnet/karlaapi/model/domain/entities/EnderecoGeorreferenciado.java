@@ -1,7 +1,5 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
-import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoResponseDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,7 +49,7 @@ public class EnderecoGeorreferenciado {
     @Column(name = "complemento_numero", length = 100)
     private String complementoNumero;
 
-    public EnderecoGeorreferenciado(EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO) {
+    /*public EnderecoGeorreferenciado(EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO) {
 
         this.setCep(enderecoGeorreferenciadoResponseDTO.getCep());
         this.setLogradouro(enderecoGeorreferenciadoResponseDTO.getLogradouro());
@@ -61,9 +59,9 @@ public class EnderecoGeorreferenciado {
         this.setUf(enderecoGeorreferenciadoResponseDTO.getUf());
         this.setLatitude(enderecoGeorreferenciadoResponseDTO.getLatitude());
         this.setLongitude(enderecoGeorreferenciadoResponseDTO.getLongitude());
-    }
+    }*/
 
-    public EnderecoGeorreferenciado(EnderecoResponseDTO enderecoResponseDTO) {
+    /*public EnderecoGeorreferenciado(EnderecoResponseDTO enderecoResponseDTO) {
 
         this.setCep(enderecoResponseDTO.getCep());
         this.setLogradouro(enderecoResponseDTO.getLogradouro());
@@ -73,7 +71,7 @@ public class EnderecoGeorreferenciado {
         this.setUf(enderecoResponseDTO.getUf());
         this.setNumero(enderecoResponseDTO.getNumero());
         this.setComplementoNumero(enderecoResponseDTO.getComplementoNumero());
-    }
+    }*/
 
     @Override
     public String toString() {

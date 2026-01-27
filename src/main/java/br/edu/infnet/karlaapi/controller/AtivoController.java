@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/ativos")
-@CrossOrigin(origins = "*")
 public class AtivoController {
 
     private final AtivoService ativoService;

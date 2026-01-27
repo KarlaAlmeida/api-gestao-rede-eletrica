@@ -1,8 +1,8 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
-import br.edu.infnet.karlaapi.model.domain.dto.out.OrdemServicoResponseDTO;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,14 +22,14 @@ public class OrdemServico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "ocorrencia_id")
-    @JsonBackReference
     private Ocorrencia ocorrencia;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "tecnico_id")
-    @JsonBackReference
     private Tecnico tecnico;
 
     @Column(name = "descricao_servico", length = 100)
@@ -43,17 +43,6 @@ public class OrdemServico {
 
     @Enumerated(EnumType.STRING)
     private StatusOS statusOS;
-
-
-    public OrdemServico(OrdemServicoResponseDTO ordemServicoResponseDTO){
-        this.setId(ordemServicoResponseDTO.getId());
-        this.ocorrencia = new Ocorrencia(ordemServicoResponseDTO.getOcorrencia());
-        this.tecnico = new Tecnico(ordemServicoResponseDTO.getTecnico());
-        this.setDescricaoServico(ordemServicoResponseDTO.getDescricaoServico());
-        this.setDataCriacaoOS(ordemServicoResponseDTO.getDataCriacaoOS());
-        this.setDataConclusaoOS(ordemServicoResponseDTO.getDataConclusaoOS());
-        this.setStatusOS(ordemServicoResponseDTO.getStatusOS());
-    }
 
     @Override
     public String toString() {

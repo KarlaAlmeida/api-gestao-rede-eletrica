@@ -1,6 +1,7 @@
 package br.edu.infnet.karlaapi.model.loader;
 
 import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.service.EnderecoGeorreferenciadoService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -18,7 +19,7 @@ public class EnderecoGeorreferenciadoLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         try {
-            EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciado =
+            EnderecoGeorreferenciado enderecoGeorreferenciado =
                     enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep("59150015");
 
             System.out.println("[RESULTADO] MEU CEP: " + enderecoGeorreferenciado.getCep());
