@@ -1,8 +1,8 @@
 package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.TecnicoRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
@@ -43,11 +43,8 @@ public class TecnicoService{
 
         String cepLimpo = tecnicoRequestDTO.getCep().replace("-", "");
 
-        EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
-                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
-
         EnderecoGeorreferenciado enderecoGeorreferenciado =
-                new EnderecoGeorreferenciado(enderecoGeorreferenciadoResponseDTO);
+                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
 
         enderecoGeorreferenciado.setNumero(tecnicoRequestDTO.getNumero());
         enderecoGeorreferenciado.setComplementoNumero(tecnicoRequestDTO.getComplementoNumero());
@@ -60,25 +57,21 @@ public class TecnicoService{
 
     public TecnicoResponseDTO alterar(Integer id, TecnicoRequestDTO tecnicoAtualizado) {
 
-        TecnicoResponseDTO tecnicoResponseDTO = obterPorId(id);
+        Tecnico tecnico = tecnicoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Técnico não encontrado"));
 
-        if(tecnicoAtualizado.getNome() != null) tecnicoResponseDTO.setNome(tecnicoAtualizado.getNome());
-        if(tecnicoAtualizado.getCpf() != null) tecnicoResponseDTO.setCpf(tecnicoAtualizado.getCpf());
-        if(tecnicoAtualizado.getEmail() != null) tecnicoResponseDTO.setEmail(tecnicoAtualizado.getEmail());
-        if(tecnicoAtualizado.getTelefone() != null) tecnicoResponseDTO.setTelefone(tecnicoAtualizado.getTelefone());
-        if(tecnicoAtualizado.getUltimoSalario() != 0) tecnicoResponseDTO.setUltimoSalario(tecnicoAtualizado.getUltimoSalario());
-        if(tecnicoAtualizado.getEspecialidade() != null) tecnicoResponseDTO.setEspecialidade(tecnicoAtualizado.getEspecialidade());
-
-        Tecnico tecnico = new Tecnico(tecnicoResponseDTO);
+        if(tecnicoAtualizado.getNome() != null) tecnico.setNome(tecnicoAtualizado.getNome());
+        if(tecnicoAtualizado.getCpf() != null) tecnico.setCpf(tecnicoAtualizado.getCpf());
+        if(tecnicoAtualizado.getEmail() != null) tecnico.setEmail(tecnicoAtualizado.getEmail());
+        if(tecnicoAtualizado.getTelefone() != null) tecnico.setTelefone(tecnicoAtualizado.getTelefone());
+        if(tecnicoAtualizado.getUltimoSalario() != 0) tecnico.setUltimoSalario(tecnicoAtualizado.getUltimoSalario());
+        if(tecnicoAtualizado.getEspecialidade() != null) tecnico.setEspecialidade(tecnicoAtualizado.getEspecialidade());
 
         if(tecnicoAtualizado.getCep() != null) {
             String cepLimpo = tecnicoAtualizado.getCep().replace("-", "");
 
-            EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
-                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
-
             EnderecoGeorreferenciado enderecoGeorreferenciado =
-                new EnderecoGeorreferenciado(enderecoGeorreferenciadoResponseDTO);
+                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
 
             if(tecnicoAtualizado.getNumero() != 0) enderecoGeorreferenciado.setNumero(tecnicoAtualizado.getNumero());
             if(tecnicoAtualizado.getComplementoNumero() != null) enderecoGeorreferenciado.setComplementoNumero(tecnicoAtualizado.getComplementoNumero());
@@ -90,16 +83,13 @@ public class TecnicoService{
     }
 
     public TecnicoResponseDTO inativar(Integer id) {
-        TecnicoResponseDTO tecnicoResponseDTO = obterPorId(id);
-        tecnicoResponseDTO.setId(id);
+        Tecnico tecnico = tecnicoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Técnico não encontrado"));
 
-        if(!tecnicoResponseDTO.isAtivo()) {
-            System.out.println("Técnico " + tecnicoResponseDTO.getNome() + " já está inativo!");
-            return tecnicoResponseDTO;
+        if(!tecnico.isAtivo()) {
+            System.out.println("Técnico " + tecnico.getNome() + " já está inativo!");
         }
-        tecnicoResponseDTO.setAtivo(false);
-
-        Tecnico tecnico = new Tecnico(tecnicoResponseDTO);
+        tecnico.setAtivo(false);
 
         return new TecnicoResponseDTO(tecnicoRepository.save(tecnico));
     }
@@ -161,8 +151,10 @@ public class TecnicoService{
     }
 
     public void excluir(Integer id) {
-        TecnicoResponseDTO tecnicoResponseDTO = obterPorId(id);
-        tecnicoRepository.delete(new Tecnico(tecnicoResponseDTO));
+        Tecnico tecnico = tecnicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Técnico não encontrado"));
+        tecnicoRepository.delete(tecnico);
     }
 
 }

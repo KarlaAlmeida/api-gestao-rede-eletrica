@@ -26,7 +26,7 @@ public class EnderecoGeorreferenciadoService {
         this.openStreetMapFeignClient = openStreetMapFeignClient;
     }
 
-    public EnderecoGeorreferenciadoResponseDTO obterEnderecoGeorreferenciadoPorCep(String cep){
+    public EnderecoGeorreferenciado obterEnderecoGeorreferenciadoPorCep(String cep){
 
         /*if (cep == null || !cep.matches("\\d{8}")) {
             throw new InvalidCepException("O CEP deve conter 8 dígitos.");
@@ -50,10 +50,12 @@ public class EnderecoGeorreferenciadoService {
                     endereco.setLongitude(geolocalizacao.getLon());
                 }
             }
-            EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
-                    new EnderecoGeorreferenciadoResponseDTO(endereco);
 
-            return enderecoGeorreferenciadoResponseDTO;
+            /*EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
+                    new EnderecoGeorreferenciadoResponseDTO(endereco);
+            return enderecoGeorreferenciadoResponseDTO;*/
+
+            return endereco;
 
         }catch (FeignException.NotFound e) {
             throw new CepNotFoundException("CEP não encontrado: " + cep);

@@ -2,7 +2,6 @@ package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.AtivoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
@@ -13,9 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AtivoService{
@@ -38,11 +34,8 @@ public class AtivoService{
 
         String cepLimpo = ativoRequestDTO.getCep().replace("-", "");
 
-        EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
-                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
-
         EnderecoGeorreferenciado enderecoGeorreferenciado =
-                new EnderecoGeorreferenciado(enderecoGeorreferenciadoResponseDTO);
+                enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
 
         ativo.setEndereco(enderecoGeorreferenciado);
 
@@ -51,40 +44,40 @@ public class AtivoService{
 
     public AtivoResponseDTO alterar(Integer id, AtivoRequestDTO ativoRequestDTO) {
 
-        AtivoResponseDTO ativoResponseDTO = obterPorId(id);
+        Ativo ativo = ativoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ativo não encontrado"));
 
         if(ativoRequestDTO.getTipoAtivo() != null)
-            ativoResponseDTO.setTipoAtivo(TipoAtivo.fromString(ativoRequestDTO.getTipoAtivo()));
+            ativo.setTipoAtivo(TipoAtivo.fromString(ativoRequestDTO.getTipoAtivo()));
 
         if(ativoRequestDTO.getDataInstalacao() != null)
-            ativoResponseDTO.setDataInstalacao(ativoRequestDTO.getDataInstalacao());
+            ativo.setDataInstalacao(ativoRequestDTO.getDataInstalacao());
 
         if(ativoRequestDTO.getCep() != null) {
             String cepLimpo = ativoRequestDTO.getCep().replace("-", "");
 
-            EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
+            EnderecoGeorreferenciado enderecoGeorreferenciado =
                     enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cepLimpo);
 
-            ativoResponseDTO.setEndereco(enderecoGeorreferenciadoResponseDTO);
+            ativo.setEndereco(enderecoGeorreferenciado);
         }
 
-        Ativo ativo = new Ativo(ativoResponseDTO);
+        Ativo ativoAtualizado = ativoRepository.save(ativo);
 
-        return new AtivoResponseDTO(ativoRepository.save(ativo));
+        return new AtivoResponseDTO(ativoAtualizado);
     }
 
     public AtivoResponseDTO alterarStatus(Integer id, String status){
-        AtivoResponseDTO ativoResponseDTO = obterPorId(id);
+        Ativo ativo = ativoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Ativo não encontrado"));
 
         StatusAtivo statusNovo = StatusAtivo.fromString(status);
 
-        if(statusNovo.equals(ativoResponseDTO.getStatusAtivo())){
+        if(statusNovo.equals(ativo.getStatusAtivo())){
             throw new IllegalStateException("O status atual do ativo já é " + status);
         }
 
-        ativoResponseDTO.setStatusAtivo(statusNovo);
-
-        Ativo ativo = new Ativo(ativoResponseDTO);
+        ativo.setStatusAtivo(statusNovo);
 
         return new AtivoResponseDTO(ativoRepository.save(ativo));
     }
@@ -111,8 +104,9 @@ public class AtivoService{
     }
 
     public void excluir(Integer id) {
-        AtivoResponseDTO ativoResponseDTO = obterPorId(id);
-        ativoRepository.delete(new Ativo(ativoResponseDTO));
+        Ativo ativo = ativoRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("O ativo com ID " + id + " não foi encontrado."));
+        ativoRepository.delete(ativo);
     }
 
 }

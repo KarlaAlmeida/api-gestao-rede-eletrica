@@ -35,13 +35,13 @@ public class Ativo {
     @JoinColumn(name = "endereco_id")
     private EnderecoGeorreferenciado endereco;
 
-    public Ativo(AtivoResponseDTO ativoResponseDTO) {
+    /*public Ativo(AtivoResponseDTO ativoResponseDTO) {
         this.setId(ativoResponseDTO.getId());
         this.setTipoAtivo(ativoResponseDTO.getTipoAtivo());
         this.setStatusAtivo(ativoResponseDTO.getStatusAtivo());
         this.setDataInstalacao(ativoResponseDTO.getDataInstalacao());
         this.setEndereco(new EnderecoGeorreferenciado(ativoResponseDTO.getEndereco()));
-    }
+    }*/
 
     @Override
     public String toString() {

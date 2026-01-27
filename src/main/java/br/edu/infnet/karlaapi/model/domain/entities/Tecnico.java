@@ -34,7 +34,7 @@ public class Tecnico extends Funcionario {
     @JsonManagedReference
     private List<OrdemServico> ordensServico = new ArrayList<>();
 
-    public Tecnico(TecnicoResponseDTO tecnicoResponseDTO){
+    /*public Tecnico(TecnicoResponseDTO tecnicoResponseDTO){
         this.setId(tecnicoResponseDTO.getId());
         this.setNome(tecnicoResponseDTO.getNome());
         this.setCpf(tecnicoResponseDTO.getCpf());
@@ -50,7 +50,7 @@ public class Tecnico extends Funcionario {
                 .stream()
                 .map(OrdemServico::new)
                 .collect(Collectors.toList());
-    }
+    }*/
 
 
     @Override

@@ -1,6 +1,7 @@
 package br.edu.infnet.karlaapi.controller;
 
 import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.service.EnderecoGeorreferenciadoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +21,9 @@ public class EnderecoGeorreferenciadoController {
     }
 
     @GetMapping("/{cep}")
-    public ResponseEntity<EnderecoGeorreferenciadoResponseDTO> obterLocalidade(@PathVariable String cep) {
+    public ResponseEntity<EnderecoGeorreferenciado> obterLocalidade(@PathVariable String cep) {
 
-        EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciado =
+        EnderecoGeorreferenciado enderecoGeorreferenciado =
                 enderecoGeorreferenciadoService.obterEnderecoGeorreferenciadoPorCep(cep);
 
         return ResponseEntity.ok(enderecoGeorreferenciado);

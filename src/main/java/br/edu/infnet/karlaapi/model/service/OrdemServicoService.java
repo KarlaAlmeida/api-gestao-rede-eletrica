@@ -2,10 +2,10 @@ package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoAlteraDataConclusaoDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.OrdemServicoResponseDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
+import br.edu.infnet.karlaapi.model.domain.entities.Ocorrencia;
 import br.edu.infnet.karlaapi.model.domain.entities.OrdemServico;
+import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
 import br.edu.infnet.karlaapi.model.repository.OcorrenciaRepository;
@@ -14,7 +14,9 @@ import br.edu.infnet.karlaapi.model.repository.TecnicoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,43 +38,57 @@ public class OrdemServicoService {
 
     public OrdemServicoResponseDTO incluir(OrdemServicoRequestDTO dto) {
 
-        OcorrenciaResponseDTO ocorrenciaResponseDTO = obterOcorrenciaPorId(dto.getOcorrenciaId());
-        TecnicoResponseDTO tecnicoResponseDTO = obterTecnicoPorCPF(dto.getCpfTecnico());
+        Ocorrencia ocorrencia = ocorrenciaRepository.findById(dto.getOcorrenciaId())
+                .orElseThrow(() -> new ResourceNotFoundException("Ocorrência não encontrada."));
 
-        OrdemServicoResponseDTO ordemServicoResponseDTO = new OrdemServicoResponseDTO();
-        ordemServicoResponseDTO.setOcorrencia(ocorrenciaResponseDTO);
-        ordemServicoResponseDTO.setTecnico(tecnicoResponseDTO);
-        ordemServicoResponseDTO.setDataCriacaoOS(LocalDate.now());
-        ordemServicoResponseDTO.setDescricaoServico(dto.getDescricaoServico());
-        ordemServicoResponseDTO.setStatusOS(StatusOS.ABERTA);
+        Tecnico tecnico = tecnicoRepository.findByCpf(dto.getCpfTecnico())
+                .orElseThrow(() -> new ResourceNotFoundException("Técnico não encontrado."));
 
-        OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
+        OrdemServico ordemServico = new OrdemServico();
+        ordemServico.setOcorrencia(ocorrencia);
+        ordemServico.setTecnico(tecnico);
+        ordemServico.setDataCriacaoOS(LocalDate.now());
+        ordemServico.setDescricaoServico(dto.getDescricaoServico());
+        ordemServico.setStatusOS(StatusOS.ABERTA);
 
-        return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
+        ordemServico = ordemServicoRepository.save(ordemServico);
+
+        return new OrdemServicoResponseDTO(ordemServico);
     }
 
     public OrdemServicoResponseDTO alterar(Integer id, OrdemServicoRequestDTO dto) {
 
-        OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
+        OrdemServico ordemServico = ordemServicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("A ordem de serviço com ID " + id + " não foi encontrada.")
+                );
 
-        if(dto.getOcorrenciaId() != null) {
-            OcorrenciaResponseDTO ocorrenciaResponseDTO = obterOcorrenciaPorId(dto.getOcorrenciaId());
-            ordemServicoResponseDTO.setOcorrencia(ocorrenciaResponseDTO);
+        if (dto.getOcorrenciaId() != null) {
+            Ocorrencia ocorrencia = ocorrenciaRepository.findById(dto.getOcorrenciaId())
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Ocorrência não encontrada pelo ID " + dto.getOcorrenciaId())
+                    );
+            ordemServico.setOcorrencia(ocorrencia);
         }
 
-        if(dto.getCpfTecnico() != null) {
-            TecnicoResponseDTO tecnicoResponseDTO = obterTecnicoPorCPF(dto.getCpfTecnico());
-            ordemServicoResponseDTO.setTecnico(tecnicoResponseDTO);
+        if (dto.getCpfTecnico() != null) {
+            Tecnico tecnico = tecnicoRepository.findByCpf(dto.getCpfTecnico())
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Técnico não encontrada pelo CPF " + dto.getCpfTecnico())
+                    );
+            ordemServico.setTecnico(tecnico);
         }
 
-        if(dto.getDescricaoServico() != null) ordemServicoResponseDTO.setDescricaoServico(dto.getDescricaoServico());
+        if (dto.getDescricaoServico() != null) {
+            ordemServico.setDescricaoServico(dto.getDescricaoServico());
+        }
 
-        OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
+        OrdemServico ordemServicoAtualizada = ordemServicoRepository.save(ordemServico);
 
-        return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
+        return new OrdemServicoResponseDTO(ordemServicoAtualizada);
     }
 
-    public OrdemServicoResponseDTO alterarStatus(Integer id, String statusNovo){
+    /*public OrdemServicoResponseDTO alterarStatus(Integer id, String statusNovo){
         OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
 
         StatusOS statusOSNovo = StatusOS.fromString(statusNovo);
@@ -86,38 +102,68 @@ public class OrdemServicoService {
         OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
 
         return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
-    }
+    }*/
 
-    public OrdemServicoResponseDTO alterarDataConclusao(Integer id, OrdemServicoAlteraDataConclusaoDTO dataConclusaoDTO){
-        OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
+    public OrdemServicoResponseDTO alterarStatus(Integer id, StatusOS statusNovo) {
 
-        if(dataConclusaoDTO.equals(ordemServicoResponseDTO.getDataConclusaoOS())){
+        OrdemServico ordemServico = ordemServicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("A ordem de serviço com ID " + id + " não foi encontrada.")
+                );
+
+        if (statusNovo.equals(ordemServico.getStatusOS())) {
             throw new IllegalStateException(
-                    "A data de conclusão atual da ordem de serviço já é " + dataConclusaoDTO);
+                    "O status atual da ordem de serviço já é " + statusNovo
+            );
         }
 
-        ordemServicoResponseDTO.setDataConclusaoOS(dataConclusaoDTO.getDataConclusaoOS());
+        ordemServico.setStatusOS(statusNovo);
 
-        OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
+        OrdemServico ordemServicoAtualizada = ordemServicoRepository.save(ordemServico);
 
-        return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
+        return new OrdemServicoResponseDTO(ordemServicoAtualizada);
     }
+
+    public OrdemServicoResponseDTO alterarDataConclusao(
+            Integer id,
+            OrdemServicoAlteraDataConclusaoDTO dto
+    ) {
+
+        OrdemServico ordemServico = ordemServicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "A ordem de serviço com ID " + id + " não foi encontrada."
+                        )
+                );
+
+        LocalDate novaData = dto.getDataConclusaoOS();
+
+        if (novaData == null) {
+            throw new IllegalArgumentException("Data de conclusão é obrigatória.");
+        }
+
+        if (novaData.equals(ordemServico.getDataConclusaoOS())) {
+            throw new IllegalStateException(
+                    "A data de conclusão atual da ordem de serviço já é " + novaData
+            );
+        }
+
+        ordemServico.setDataConclusaoOS(novaData);
+
+        OrdemServico ordemServicoAtualizada = ordemServicoRepository.save(ordemServico);
+
+        return new OrdemServicoResponseDTO(ordemServicoAtualizada);
+    }
+
 
     public OrdemServicoResponseDTO obterPorId(Integer id) {
-        return new OrdemServicoResponseDTO(ordemServicoRepository.findById(id).orElseThrow(()->
-                new ResourceNotFoundException("A ordem de serviço com ID " + id + " não foi encontrada.")));
+        OrdemServico ordemServico = ordemServicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("A ordem de serviço com ID " + id + " não foi encontrada.")
+                );
+        return new OrdemServicoResponseDTO(ordemServico);
     }
 
-    public OcorrenciaResponseDTO obterOcorrenciaPorId(Integer id){
-        return new OcorrenciaResponseDTO(ocorrenciaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ocorrência não encontrada pelo ID " + id)));
-    }
-
-    public TecnicoResponseDTO obterTecnicoPorCPF(String cpfTecnico){
-        return new TecnicoResponseDTO(tecnicoRepository.findByCpf(cpfTecnico)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Técnico não encontrado pelo CPF " + cpfTecnico)));
-    }
 
     /*public List<OrdemServicoResponseDTO> obterLista() {
         return ordemServicoRepository.findAll()
@@ -151,8 +197,11 @@ public class OrdemServicoService {
     }
 
     public void excluir(Integer id) {
-        OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
-        ordemServicoRepository.delete(new OrdemServico(ordemServicoResponseDTO));
+        OrdemServico ordemServico = ordemServicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("A ordem de serviço com ID " + id + " não foi encontrada.")
+                );
+        ordemServicoRepository.delete(ordemServico);
     }
 
 }

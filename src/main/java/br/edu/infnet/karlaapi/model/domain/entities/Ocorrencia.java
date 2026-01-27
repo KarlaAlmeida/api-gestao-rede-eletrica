@@ -47,7 +47,7 @@ public class Ocorrencia {
     private List<OrdemServico> ordensServico = new ArrayList<>();
 
 
-    public Ocorrencia(OcorrenciaResponseDTO ocorrenciaResponseDTO){
+    /*public Ocorrencia(OcorrenciaResponseDTO ocorrenciaResponseDTO){
         this.setId(ocorrenciaResponseDTO.getId());
         this.ativo = new Ativo(ocorrenciaResponseDTO.getAtivo());
         this.setDescricaoOcorrencia(ocorrenciaResponseDTO.getDescricaoOcorrencia());
@@ -58,7 +58,7 @@ public class Ocorrencia {
                 .stream()
                 .map(OrdemServico::new)
                 .collect(Collectors.toList());
-    }
+    }*/
 
     @Override
     public String toString() {

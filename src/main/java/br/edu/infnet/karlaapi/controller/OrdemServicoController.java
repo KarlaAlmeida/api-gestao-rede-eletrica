@@ -1,8 +1,8 @@
 package br.edu.infnet.karlaapi.controller;
 
+import br.edu.infnet.karlaapi.model.domain.dto.AlterarStatusOrdemServicoDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoAlteraDataConclusaoDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.in.OrdemServicoRequestDTO;
-import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.OrdemServicoResponseDTO;
 import br.edu.infnet.karlaapi.model.service.OrdemServicoService;
 import jakarta.validation.Valid;
@@ -40,18 +40,32 @@ public class OrdemServicoController {
         return ResponseEntity.ok(ordemServicoService.alterar(id, dto));
     }
 
-    @PatchMapping(value = "/{id}/status")
+    /*@PatchMapping(value = "/{id}/status")
     public ResponseEntity<OrdemServicoResponseDTO> alterarStatus(@PathVariable Integer id,
                                                       @RequestParam String statusOS){
         return ResponseEntity.ok(ordemServicoService.alterarStatus(id, statusOS));
+    }*/
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<OrdemServicoResponseDTO> alterarStatus(
+            @PathVariable Integer id,
+            @RequestBody @Valid AlterarStatusOrdemServicoDTO dto
+    ) {
+        return ResponseEntity.ok(
+                ordemServicoService.alterarStatus(id, dto.getStatusOS())
+        );
     }
 
-    @PatchMapping(value = "/{id}")
-    public ResponseEntity<OrdemServicoResponseDTO> alterarDataConclusao(@PathVariable Integer id,
-                                                             @Valid @RequestBody
-                                                             OrdemServicoAlteraDataConclusaoDTO dataConclusao){
-        return ResponseEntity.ok(ordemServicoService.alterarDataConclusao(id, dataConclusao));
+    @PatchMapping("/{id}/data-conclusao")
+    public ResponseEntity<OrdemServicoResponseDTO> alterarDataConclusao(
+            @PathVariable Integer id,
+            @RequestBody OrdemServicoAlteraDataConclusaoDTO dto
+    ) {
+        return ResponseEntity.ok(
+                ordemServicoService.alterarDataConclusao(id, dto)
+        );
     }
+
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<OrdemServicoResponseDTO> obterPorId(@PathVariable Integer id){
