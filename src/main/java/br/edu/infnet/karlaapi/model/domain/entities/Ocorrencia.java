@@ -1,6 +1,5 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
-import br.edu.infnet.karlaapi.model.domain.dto.out.OcorrenciaResponseDTO;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.PrioridadeOcorrencia;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOcorrencia;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -13,7 +12,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -46,19 +44,6 @@ public class Ocorrencia {
     @JsonManagedReference
     private List<OrdemServico> ordensServico = new ArrayList<>();
 
-
-    /*public Ocorrencia(OcorrenciaResponseDTO ocorrenciaResponseDTO){
-        this.setId(ocorrenciaResponseDTO.getId());
-        this.ativo = new Ativo(ocorrenciaResponseDTO.getAtivo());
-        this.setDescricaoOcorrencia(ocorrenciaResponseDTO.getDescricaoOcorrencia());
-        this.setPrioridadeOcorrencia(ocorrenciaResponseDTO.getPrioridadeOcorrencia());
-        this.setDataRegistroOcorrencia(ocorrenciaResponseDTO.getDataRegistroOcorrencia());
-        this.setStatusOcorrencia(ocorrenciaResponseDTO.getStatusOcorrencia());
-        this.ordensServico = ocorrenciaResponseDTO.getOrdensServico()
-                .stream()
-                .map(OrdemServico::new)
-                .collect(Collectors.toList());
-    }*/
 
     @Override
     public String toString() {

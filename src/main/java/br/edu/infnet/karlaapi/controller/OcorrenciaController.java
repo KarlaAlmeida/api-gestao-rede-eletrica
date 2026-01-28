@@ -37,11 +37,6 @@ public class OcorrenciaController {
 
     }
 
-    /*@PatchMapping(value = "/{id}/status")
-    public ResponseEntity<OcorrenciaResponseDTO> alterarStatus(@PathVariable Integer id,
-                                                    @RequestParam String statusOcorrencia){
-        return ResponseEntity.ok(ocorrenciaService.alterarStatus(id, statusOcorrencia));
-    }*/
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<OcorrenciaResponseDTO> alterarStatus(
@@ -69,17 +64,6 @@ public class OcorrenciaController {
         return ResponseEntity.ok(ocorrenciaService.obterPorId(id));
     }
 
-    /*@GetMapping
-    public ResponseEntity<List<OcorrenciaResponseDTO>> obterLista(){
-
-        List<OcorrenciaResponseDTO> lista = ocorrenciaService.obterLista();
-
-        if(lista.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(lista);
-    }*/
 
     @GetMapping
     public ResponseEntity<Page<OcorrenciaResponseDTO>> obterLista(

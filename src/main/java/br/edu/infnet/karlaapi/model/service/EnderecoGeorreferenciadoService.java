@@ -2,7 +2,6 @@ package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.clients.OpenStreetMapFeignClient;
 import br.edu.infnet.karlaapi.model.clients.ViaCepFeignClient;
-import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.domain.entities.Geolocalizacao;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.CepNotFoundException;
@@ -28,9 +27,7 @@ public class EnderecoGeorreferenciadoService {
 
     public EnderecoGeorreferenciado obterEnderecoGeorreferenciadoPorCep(String cep){
 
-        /*if (cep == null || !cep.matches("\\d{8}")) {
-            throw new InvalidCepException("O CEP deve conter 8 dígitos.");
-        }*/
+
         String cepLimpo = cep.replaceAll("\\D", "");
 
         if (!cepLimpo.matches("\\d{8}")) {
@@ -50,10 +47,6 @@ public class EnderecoGeorreferenciadoService {
                     endereco.setLongitude(geolocalizacao.getLon());
                 }
             }
-
-            /*EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO =
-                    new EnderecoGeorreferenciadoResponseDTO(endereco);
-            return enderecoGeorreferenciadoResponseDTO;*/
 
             return endereco;
 

@@ -40,11 +40,6 @@ public class OrdemServicoController {
         return ResponseEntity.ok(ordemServicoService.alterar(id, dto));
     }
 
-    /*@PatchMapping(value = "/{id}/status")
-    public ResponseEntity<OrdemServicoResponseDTO> alterarStatus(@PathVariable Integer id,
-                                                      @RequestParam String statusOS){
-        return ResponseEntity.ok(ordemServicoService.alterarStatus(id, statusOS));
-    }*/
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<OrdemServicoResponseDTO> alterarStatus(
@@ -72,17 +67,6 @@ public class OrdemServicoController {
         return ResponseEntity.ok(ordemServicoService.obterPorId(id));
     }
 
-    /*@GetMapping
-    public ResponseEntity<List<OrdemServicoResponseDTO>> obterLista(){
-
-        List<OrdemServicoResponseDTO> lista = ordemServicoService.obterLista();
-
-        if(lista.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(lista);
-    }*/
 
     @GetMapping
     public ResponseEntity<Page<OrdemServicoResponseDTO>> obterLista(

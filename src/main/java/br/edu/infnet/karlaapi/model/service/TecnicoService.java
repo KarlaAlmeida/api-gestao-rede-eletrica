@@ -2,7 +2,6 @@ package br.edu.infnet.karlaapi.model.service;
 
 import br.edu.infnet.karlaapi.model.domain.dto.in.TecnicoRequestDTO;
 import br.edu.infnet.karlaapi.model.domain.dto.out.TecnicoResponseDTO;
-import br.edu.infnet.karlaapi.model.domain.entities.Ativo;
 import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.domain.entities.Tecnico;
 import br.edu.infnet.karlaapi.model.infraestructure.exceptions.ResourceNotFoundException;
@@ -127,12 +126,6 @@ public class TecnicoService{
 
     }
 
-    /*public List<TecnicoResponseDTO> obterLista() {
-        return tecnicoRepository.findAll()
-                .stream()
-                .map(TecnicoResponseDTO::new) // chama o construtor DTO(Tecnico)
-                .toList();
-    }*/
 
     public Page<TecnicoResponseDTO> obterLista(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);

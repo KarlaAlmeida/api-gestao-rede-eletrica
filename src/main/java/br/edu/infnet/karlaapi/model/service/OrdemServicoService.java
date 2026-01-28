@@ -14,9 +14,7 @@ import br.edu.infnet.karlaapi.model.repository.TecnicoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -88,21 +86,6 @@ public class OrdemServicoService {
         return new OrdemServicoResponseDTO(ordemServicoAtualizada);
     }
 
-    /*public OrdemServicoResponseDTO alterarStatus(Integer id, String statusNovo){
-        OrdemServicoResponseDTO ordemServicoResponseDTO = obterPorId(id);
-
-        StatusOS statusOSNovo = StatusOS.fromString(statusNovo);
-
-        if(statusOSNovo.equals(ordemServicoResponseDTO.getStatusOS())){
-            throw new IllegalStateException("O status atual da ordem de serviço já é " + statusOSNovo);
-        }
-
-        ordemServicoResponseDTO.setStatusOS(statusOSNovo);
-
-        OrdemServico ordemServico = new OrdemServico(ordemServicoResponseDTO);
-
-        return new OrdemServicoResponseDTO(ordemServicoRepository.save(ordemServico));
-    }*/
 
     public OrdemServicoResponseDTO alterarStatus(Integer id, StatusOS statusNovo) {
 
@@ -164,13 +147,6 @@ public class OrdemServicoService {
         return new OrdemServicoResponseDTO(ordemServico);
     }
 
-
-    /*public List<OrdemServicoResponseDTO> obterLista() {
-        return ordemServicoRepository.findAll()
-                .stream()
-                .map(OrdemServicoResponseDTO::new) // chama o construtor DTO(Tecnico)
-                .toList();
-    }*/
 
     public Page<OrdemServicoResponseDTO> obterLista(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);

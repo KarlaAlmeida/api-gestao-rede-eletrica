@@ -1,6 +1,5 @@
 package br.edu.infnet.karlaapi.controller;
 
-import br.edu.infnet.karlaapi.model.domain.dto.out.EnderecoGeorreferenciadoResponseDTO;
 import br.edu.infnet.karlaapi.model.domain.entities.EnderecoGeorreferenciado;
 import br.edu.infnet.karlaapi.model.service.EnderecoGeorreferenciadoService;
 import org.springframework.http.ResponseEntity;

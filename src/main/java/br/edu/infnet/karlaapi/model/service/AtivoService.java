@@ -89,12 +89,6 @@ public class AtivoService{
         return new AtivoResponseDTO(ativo);
     }
 
-    /*public List<AtivoResponseDTO> obterLista() {
-        return ativoRepository.findAll()
-                .stream()
-                .map(AtivoResponseDTO::new) // chama o construtor DTO(Tecnico)
-                .toList();
-    }*/
 
     public Page<AtivoResponseDTO> obterLista(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);

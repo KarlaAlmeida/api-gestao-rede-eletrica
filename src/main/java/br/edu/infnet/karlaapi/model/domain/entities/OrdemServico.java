@@ -1,7 +1,6 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusOS;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -49,29 +49,6 @@ public class EnderecoGeorreferenciado {
     @Column(name = "complemento_numero", length = 100)
     private String complementoNumero;
 
-    /*public EnderecoGeorreferenciado(EnderecoGeorreferenciadoResponseDTO enderecoGeorreferenciadoResponseDTO) {
-
-        this.setCep(enderecoGeorreferenciadoResponseDTO.getCep());
-        this.setLogradouro(enderecoGeorreferenciadoResponseDTO.getLogradouro());
-        this.setComplemento(enderecoGeorreferenciadoResponseDTO.getComplemento());
-        this.setBairro(enderecoGeorreferenciadoResponseDTO.getBairro());
-        this.setLocalidade(enderecoGeorreferenciadoResponseDTO.getLocalidade());
-        this.setUf(enderecoGeorreferenciadoResponseDTO.getUf());
-        this.setLatitude(enderecoGeorreferenciadoResponseDTO.getLatitude());
-        this.setLongitude(enderecoGeorreferenciadoResponseDTO.getLongitude());
-    }*/
-
-    /*public EnderecoGeorreferenciado(EnderecoResponseDTO enderecoResponseDTO) {
-
-        this.setCep(enderecoResponseDTO.getCep());
-        this.setLogradouro(enderecoResponseDTO.getLogradouro());
-        this.setComplemento(enderecoResponseDTO.getComplemento());
-        this.setBairro(enderecoResponseDTO.getBairro());
-        this.setLocalidade(enderecoResponseDTO.getLocalidade());
-        this.setUf(enderecoResponseDTO.getUf());
-        this.setNumero(enderecoResponseDTO.getNumero());
-        this.setComplementoNumero(enderecoResponseDTO.getComplementoNumero());
-    }*/
 
     @Override
     public String toString() {

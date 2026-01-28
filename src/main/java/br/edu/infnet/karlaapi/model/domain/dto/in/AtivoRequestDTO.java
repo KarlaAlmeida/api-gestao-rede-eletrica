@@ -1,6 +1,5 @@
 package br.edu.infnet.karlaapi.model.domain.dto.in;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;

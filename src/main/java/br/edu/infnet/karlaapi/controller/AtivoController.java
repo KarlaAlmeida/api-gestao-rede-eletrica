@@ -46,18 +46,6 @@ public class AtivoController {
         return ResponseEntity.ok(ativoService.obterPorId(id));
     }
 
-    /*@GetMapping
-    public ResponseEntity<List<AtivoResponseDTO>> obterLista(){
-
-        List<AtivoResponseDTO> lista = ativoService.obterLista();
-
-        if(lista.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(lista);
-    }*/
-
     @GetMapping
     public ResponseEntity<Page<AtivoResponseDTO>> obterLista(
             @RequestParam(defaultValue = "0") Integer page,

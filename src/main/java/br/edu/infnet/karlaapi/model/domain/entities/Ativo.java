@@ -1,6 +1,5 @@
 package br.edu.infnet.karlaapi.model.domain.entities;
 
-import br.edu.infnet.karlaapi.model.domain.dto.out.AtivoResponseDTO;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.StatusAtivo;
 import br.edu.infnet.karlaapi.model.infraestructure.enums.TipoAtivo;
 import jakarta.persistence.*;
@@ -35,13 +34,6 @@ public class Ativo {
     @JoinColumn(name = "endereco_id")
     private EnderecoGeorreferenciado endereco;
 
-    /*public Ativo(AtivoResponseDTO ativoResponseDTO) {
-        this.setId(ativoResponseDTO.getId());
-        this.setTipoAtivo(ativoResponseDTO.getTipoAtivo());
-        this.setStatusAtivo(ativoResponseDTO.getStatusAtivo());
-        this.setDataInstalacao(ativoResponseDTO.getDataInstalacao());
-        this.setEndereco(new EnderecoGeorreferenciado(ativoResponseDTO.getEndereco()));
-    }*/
 
     @Override
     public String toString() {

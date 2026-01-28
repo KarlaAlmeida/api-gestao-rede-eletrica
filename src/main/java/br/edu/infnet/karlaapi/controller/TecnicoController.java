@@ -85,16 +85,6 @@ public class TecnicoController {
         return ResponseEntity.ok(tecnicoService.obterPorId(id));
     }
 
-    /*@GetMapping
-    public ResponseEntity<List<TecnicoResponseDTO>> obterLista(){
-        List<TecnicoResponseDTO> lista = tecnicoService.obterLista();
-
-        if(lista.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(lista);
-    }*/
 
     @GetMapping
     public ResponseEntity<Page<TecnicoResponseDTO>> obterLista(
