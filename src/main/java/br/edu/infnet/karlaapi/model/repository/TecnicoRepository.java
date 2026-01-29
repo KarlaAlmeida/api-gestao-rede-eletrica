@@ -21,4 +21,6 @@ public interface TecnicoRepository extends JpaRepository<Tecnico, Integer> {
     @EntityGraph(attributePaths = {"ordensServico", "endereco"})
     List<Tecnico> findByNomeStartingWithIgnoreCaseAndEspecialidadeIgnoreCase(
             String prefixoNome, String especialidade);
+
+    long count();
 }

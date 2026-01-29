@@ -19,4 +19,6 @@ public interface AtivoRepository extends JpaRepository<Ativo, Integer> {
     @EntityGraph(attributePaths = {"endereco"})
     Optional<Ativo> findById(Integer id);
 
+    long count();
+
 }
