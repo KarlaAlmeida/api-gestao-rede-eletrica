@@ -15,7 +15,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/tecnicos")
-
 public class TecnicoController {
 
     private final TecnicoService tecnicoService;

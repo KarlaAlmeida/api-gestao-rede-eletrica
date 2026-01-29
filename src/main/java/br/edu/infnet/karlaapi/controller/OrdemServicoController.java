@@ -17,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/ordem-servico")
-@CrossOrigin(origins = "*")
 public class OrdemServicoController {
 
     private final OrdemServicoService ordemServicoService;
