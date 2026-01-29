@@ -14,8 +14,7 @@ public class Usuario {
     private Long id;
     private String username;
     private String password;
-    private String role;
-    /*private boolean ativo;
+    private boolean ativo;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuarios_roles",
@@ -23,5 +22,5 @@ public class Usuario {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;*/
+    private Set<Role> roles;
 }

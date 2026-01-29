@@ -21,7 +21,7 @@ public class UserDetailService implements UserDetailsService  {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
         List<SimpleGrantedAuthority> roles = usuario.getRoles()
-                .stream().map(role -> new SimpleGrantedAuthority(role.getNome())).toList();
+                .stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getNome())).toList();
 
         return User.builder().username(usuario.getUsername())
                 .password(usuario.getPassword())
