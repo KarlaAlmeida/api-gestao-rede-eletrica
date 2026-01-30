@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: db_rede_eletrica
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 141724Ka!
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: karla-api
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=db_rede_eletrica
+      - DB_USER=postgres
+      - DB_PASSWORD=141724Ka!
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
