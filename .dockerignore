@@ -1,0 +1,13 @@
+target/
+.git/
+*.log
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+.project
+.classpath
+.settings/
+# Ensure maven wrapper jar is NOT ignored
+# .mvn/wrapper/maven-wrapper.jar
