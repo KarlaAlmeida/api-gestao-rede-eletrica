@@ -12,8 +12,8 @@ import java.util.Set;
 public class Usuario {
     @Id@GeneratedValue
     private Long id;
-    private String username;
-    private String password;
+    private String login;
+    private String senha;
     private boolean ativo;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

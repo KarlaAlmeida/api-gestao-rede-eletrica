@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/auth/login")
 @RequiredArgsConstructor
 public class LoginController {
     private final AuthenticationManager authenticationManager;
@@ -27,15 +27,15 @@ public class LoginController {
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest request){
         try {
-            var authToken = new UsernamePasswordAuthenticationToken(request.username(), request.password());
+            var authToken = new UsernamePasswordAuthenticationToken(request.login(), request.senha());
             Authentication authenticate = authenticationManager.authenticate(authToken);
             String token = jwtService.generateToken(authenticate);
-            String username = authenticate.getName();
+            String login = authenticate.getName();
             List<String> roles = authenticate.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .toList();
             //return ResponseEntity.ok(Map.of("token",token));
-            return ResponseEntity.ok(new LoginJwtResponse(username, roles, token));
+            return ResponseEntity.ok(new LoginJwtResponse(login, roles, token));
         }catch (BadCredentialsException bce){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "invalid Credendials"));

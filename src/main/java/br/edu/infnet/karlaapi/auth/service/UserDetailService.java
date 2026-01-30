@@ -17,14 +17,15 @@ import java.util.List;
 @Service
 public class UserDetailService implements UserDetailsService  {
     private final UsuarioRepository usuarioRepository;
+
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        Usuario usuario = usuarioRepository.findByLogin(login).orElseThrow(() -> new UsernameNotFoundException(login));
         List<SimpleGrantedAuthority> roles = usuario.getRoles()
                 .stream().map(role -> new SimpleGrantedAuthority(role.getNome())).toList();
 
-        return User.builder().username(usuario.getUsername())
-                .password(usuario.getPassword())
+        return User.builder().username(usuario.getLogin())
+                .password(usuario.getSenha())
                 .authorities(roles)
                 .disabled(!usuario.isAtivo())
                 .build();
