@@ -55,8 +55,8 @@ O projeto segue uma arquitetura clássica em camadas, promovendo a separação d
     ./mvnw spring-boot:run
     ```
 4. **Acesse o Console H2:**
-    - A aplicação será iniciada na porta `8080`.
-    - Abra seu navegador e acesse `http://localhost:8080/h2-console`.
+    - A aplicação será iniciada na porta `8081`.
+    - Abra seu navegador e acesse `http://localhost:8081/h2-console`.
     - Use as seguintes configurações para conectar:
         - **Driver Class:** `org.h2.Driver`
         - **JDBC URL:** `jdbc:h2:~/databaseKarla`
