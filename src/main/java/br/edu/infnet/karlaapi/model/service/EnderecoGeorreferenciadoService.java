@@ -39,7 +39,7 @@ public class EnderecoGeorreferenciadoService {
 
             if (endereco != null) {
                 String query = endereco.getLogradouro() + ", " + endereco.getLocalidade() + ", " + endereco.getUf();
-                List<Geolocalizacao> geolocalizacoes = openStreetMapFeignClient.search(query, "jsonv2", 10);
+                List<Geolocalizacao> geolocalizacoes = openStreetMapFeignClient.search(query, "jsonv2", 10, "KarlaAPI/1.0 (karla@example.com)");
 
                 if (geolocalizacoes != null && !geolocalizacoes.isEmpty()) {
                     Geolocalizacao geolocalizacao = geolocalizacoes.get(0);
