@@ -68,6 +68,13 @@ public class SecurityConfig {
 
                                 //.requestMatchers("/api/**").permitAll()
 
+                        .requestMatchers(
+                                "/actuator/health",
+                                "/actuator/health/**",
+                                "/actuator/info",
+                                "/actuator/prometheus"
+                        ).permitAll()
+
                         .requestMatchers("/api/dashboard").hasAnyRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "/api/ativos").hasAnyRole("ADMIN", "USER")
