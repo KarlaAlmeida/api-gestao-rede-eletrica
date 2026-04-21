@@ -57,6 +57,6 @@ class EnderecoGeorreferenciadoServiceTest {
         assertNotNull(result);
         assertEquals("-5.918", result.getLatitude());
         assertEquals("-35.275", result.getLongitude());
-        verify(openStreetMapFeignClient).search(contains("Rua Pantanal"), eq("jsonv2"), eq(10), eq("KarlaAPI/1.0 (karla@example.com)"));
+        verify(openStreetMapFeignClient).search(contains("Rua Pantanal"), eq("jsonv2"), eq(10), eq("KarlaGeoApp-1.0-karla-at-example-dot-com"));
     }
 }
