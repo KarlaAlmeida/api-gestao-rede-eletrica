@@ -19,9 +19,6 @@ public class EnderecoGeorreferenciadoService {
     @Value("${api.openstreetmap.useragent}")
     private String userAgent;
 
-    @Value("${api.openstreetmap.email}")
-    private String email;
-
     //private final GeolocalizacaoFeignClient geolocalizacaoFeignClient;
     private final ViaCepFeignClient viaCepFeignClient;
     private final OpenStreetMapFeignClient openStreetMapFeignClient;
@@ -46,7 +43,7 @@ public class EnderecoGeorreferenciadoService {
 
             if (endereco != null) {
                 String query = endereco.getLogradouro() + ", " + endereco.getLocalidade() + ", " + endereco.getUf();
-                List<Geolocalizacao> geolocalizacoes = openStreetMapFeignClient.search(query, "jsonv2", 10, email, userAgent);
+                List<Geolocalizacao> geolocalizacoes = openStreetMapFeignClient.search(query, "jsonv2", 10, userAgent);
 
                 if (geolocalizacoes != null && !geolocalizacoes.isEmpty()) {
                     Geolocalizacao geolocalizacao = geolocalizacoes.get(0);

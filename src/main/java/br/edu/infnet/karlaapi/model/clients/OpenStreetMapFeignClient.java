@@ -15,6 +15,5 @@ public interface OpenStreetMapFeignClient {
     List<Geolocalizacao> search(@RequestParam("q") String query,
                                 @RequestParam("format") String format,
                                 @RequestParam("limit") int limit,
-                                @RequestParam("email") String email,
                                 @RequestHeader("User-Agent") String userAgent);
 }

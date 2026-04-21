@@ -35,7 +35,6 @@ class EnderecoGeorreferenciadoServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(service, "userAgent", "Infnet-Karla-Georef-App-2026");
-        ReflectionTestUtils.setField(service, "email", "karla@example.com");
     }
 
     @Test
@@ -53,13 +52,13 @@ class EnderecoGeorreferenciadoServiceTest {
         List<Geolocalizacao> geolocalizacoes = Collections.singletonList(geolocalizacao);
 
         when(viaCepFeignClient.findByCep(cep)).thenReturn(endereco);
-        when(openStreetMapFeignClient.search(anyString(), anyString(), anyInt(), anyString(), anyString())).thenReturn(geolocalizacoes);
+        when(openStreetMapFeignClient.search(anyString(), anyString(), anyInt(), anyString())).thenReturn(geolocalizacoes);
 
         EnderecoGeorreferenciado result = service.obterEnderecoGeorreferenciadoPorCep(cep);
 
         assertNotNull(result);
         assertEquals("-5.918", result.getLatitude());
         assertEquals("-35.275", result.getLongitude());
-        verify(openStreetMapFeignClient).search(contains("Rua Pantanal"), eq("jsonv2"), eq(10), eq("karla@example.com"), eq("Infnet-Karla-Georef-App-2026"));
+        verify(openStreetMapFeignClient).search(contains("Rua Pantanal"), eq("jsonv2"), eq(10), eq("Infnet-Karla-Georef-App-2026"));
     }
 }
