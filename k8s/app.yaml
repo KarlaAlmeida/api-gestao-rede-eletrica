@@ -50,11 +50,19 @@ spec:
                 secretKeyRef:
                   name: karla-secret
                   key: JWT_SECRET
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 18
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8081
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
@@ -62,17 +70,17 @@ spec:
             httpGet:
               path: /actuator/health/liveness
               port: 8081
-            initialDelaySeconds: 40
+            initialDelaySeconds: 10
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 5
           resources:
             requests:
-              cpu: "200m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
+              cpu: "250m"
               memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
 ---
 apiVersion: v1
 kind: Service
