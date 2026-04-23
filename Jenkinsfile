@@ -17,13 +17,14 @@ pipeline {
 
         stage('Build Maven') {
             steps {
-                bat 'mvnw.cmd clean package -DskipTests'
+                sh 'chmod +x mvnw'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %DOCKER_IMAGE%:%IMAGE_TAG% ."
+                sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} ."
             }
         }
 
@@ -34,56 +35,56 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                 }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                bat "docker push %DOCKER_IMAGE%:%IMAGE_TAG%"
+                sh "docker push ${DOCKER_IMAGE}:${IMAGE_TAG}"
             }
         }
 
         stage('Deploy to Kubernetes') {
             steps {
-                bat "kubectl apply -f k8s/namespace.yaml"
-                bat "kubectl apply -f k8s/secret.yaml -n %K8S_NAMESPACE%"
-                bat "kubectl apply -f k8s/postgres.yaml -n %K8S_NAMESPACE%"
-                bat "kubectl apply -f k8s/app.yaml -n %K8S_NAMESPACE%"
-                bat "kubectl apply -f monitoring/prometheus-configmap.yaml -n %K8S_NAMESPACE%"
-                bat "kubectl apply -f monitoring/prometheus-pvc.yaml -n %K8S_NAMESPACE%"
-                bat "kubectl apply -f monitoring/prometheus.yaml -n %K8S_NAMESPACE%"
-                bat "kubectl apply -f k8s/grafana.yaml -n %K8S_NAMESPACE%"
+                sh "kubectl apply -f k8s/namespace.yaml"
+                sh "kubectl apply -f k8s/secret.yaml -n ${K8S_NAMESPACE}"
+                sh "kubectl apply -f k8s/postgres.yaml -n ${K8S_NAMESPACE}"
+                sh "kubectl apply -f k8s/app.yaml -n ${K8S_NAMESPACE}"
+                sh "kubectl apply -f monitoring/prometheus-configmap.yaml -n ${K8S_NAMESPACE}"
+                sh "kubectl apply -f monitoring/prometheus-pvc.yaml -n ${K8S_NAMESPACE}"
+                sh "kubectl apply -f monitoring/prometheus.yaml -n ${K8S_NAMESPACE}"
+                sh "kubectl apply -f k8s/grafana.yaml -n ${K8S_NAMESPACE}"
             }
         }
 
         stage('Restart Application Rollout') {
             steps {
-                bat "kubectl rollout restart deployment/karlaapi -n %K8S_NAMESPACE%"
+                sh "kubectl rollout restart deployment/karlaapi -n ${K8S_NAMESPACE}"
             }
         }
 
         stage('Check Rollout Status') {
             steps {
-                bat "kubectl rollout status deployment/postgres -n %K8S_NAMESPACE%"
-                bat "kubectl rollout status deployment/karlaapi -n %K8S_NAMESPACE%"
-                bat "kubectl rollout status deployment/prometheus -n %K8S_NAMESPACE%"
-                bat "kubectl rollout status deployment/grafana -n %K8S_NAMESPACE%"
+                sh "kubectl rollout status deployment/postgres -n ${K8S_NAMESPACE}"
+                sh "kubectl rollout status deployment/karlaapi -n ${K8S_NAMESPACE}"
+                sh "kubectl rollout status deployment/prometheus -n ${K8S_NAMESPACE}"
+                sh "kubectl rollout status deployment/grafana -n ${K8S_NAMESPACE}"
             }
         }
 
         stage('Check Cluster Resources') {
             steps {
-                bat "kubectl get all -n %K8S_NAMESPACE%"
-                bat "kubectl get pvc -n %K8S_NAMESPACE%"
+                sh "kubectl get all -n ${K8S_NAMESPACE}"
+                sh "kubectl get pvc -n ${K8S_NAMESPACE}"
             }
         }
     }
 
     post {
         always {
-            bat 'docker logout'
+            sh 'docker logout || true'
         }
         success {
             echo 'Pipeline executado com sucesso.'
