@@ -146,3 +146,5 @@ A aplicação aguarda o banco de dados estar pronto (healthcheck) antes de inici
 1. Utilize o `POST /api/auth/login` com as credenciais iniciais (carregadas via `DataLoader` se configurado) para obter o token.
 2. Inclua o token no header das requisições subsequentes: `Authorization: Bearer <seu_token>`.
 3. Utilize ferramentas como Postman ou Insomnia para interagir com os endpoints listados acima.
+
+------------------------------
