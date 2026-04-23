@@ -48,7 +48,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh "kubectl apply -f k8s/namespace.yaml"
+
                 sh "kubectl apply -f k8s/secret.yaml -n ${K8S_NAMESPACE}"
                 sh "kubectl apply -f k8s/postgres.yaml -n ${K8S_NAMESPACE}"
                 sh "kubectl apply -f k8s/app.yaml -n ${K8S_NAMESPACE}"
