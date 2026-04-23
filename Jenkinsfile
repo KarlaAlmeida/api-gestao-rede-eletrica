@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'karlaalmeida/karlaapi'
+        DOCKER_IMAGE = 'karlaalmeida/karlaapi-test'
         IMAGE_TAG = 'latest'
         K8S_NAMESPACE = 'karla-devops'
     }
