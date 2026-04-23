@@ -18,6 +18,25 @@ spec:
           image: jenkins/jenkins:lts
           ports:
             - containerPort: 8080
+          securityContext:
+            runAsUser: 0
+            privileged: true
+          command:
+            - /bin/bash
+            - -c
+            - |
+              apt-get update && \
+              apt-get install -y docker.io curl && \
+              curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+              install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+              exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
+          volumeMounts:
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
 ---
 apiVersion: v1
 kind: Service
